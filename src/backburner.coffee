@@ -8,7 +8,16 @@ All rights reserved until I decide on a license
 backburner = {}
 
 backburner.Task = class Task
-    constructor: (@context) ->
+    constructor: (@fn, config) ->
+        config ?= {}
+        @_context = if config.context? then config.context else {}
+        @_runnable = config.runnable == true
+
+    start: ->
+        @_runnable = yes
+
+    stop: ->
+        @_runnable = no
 
 backburner.spawn = ->
     throw 'Not implemented.'
