@@ -19,7 +19,6 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* Build for node, w/ unit tests
 * Implement:
   * backburner.Task: describes a task, allows starting, pausing, stopping, etc.
   * backburner.spawn(backburner.Task)
