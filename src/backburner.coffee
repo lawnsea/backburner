@@ -35,8 +35,12 @@ backburner.Task = class Task
     tick: ->
         @_tickFn.call @_context
 
-backburner.spawn = ->
-    throw 'Not implemented.'
+backburner.spawn = (fn, config) ->
+    task = new Task fn, config
+    task.start()
+    return task
+
+whileFn = ->
 
 backburner.while = ->
     throw 'Not implemented.'
