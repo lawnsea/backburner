@@ -20,6 +20,9 @@ These are tasks and ideas that haven't been put somewhere else
 Sprint 1
 ========
 * Implement:
-  * backburner.Task: describes a task, allows starting, pausing, stopping, etc.
-  * backburner.spawn(backburner.Task)
   * backburner.while(loopTestFn, loopBodyFn, resultFn, context) -> backburner.Task
+  * a simple scheduler
+* should spawn also accept a Task?
+* Task should support chaining
+* Task should be a promise
+* Tasks should be assigned a unique id and added to the scheduler's task pool
