@@ -1,5 +1,10 @@
 {exec} = require 'child_process'
 
+task 'test', 'Run all tests', ->
+    exec 'node specs.js', (err, stdout, stderr) ->
+        throw err if err
+        console.log stdout + stderr
+
 task 'clean', 'Clean the working directory in the usual manner', ->
     exec 'rm -rf lib', (err, stdout, stderr) ->
         throw err if err
