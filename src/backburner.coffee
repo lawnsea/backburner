@@ -54,7 +54,7 @@ whileFn = ->
         try
             @_loopBodyFn
         catch e
-            @resolveWith this, e
+            @rejectWith this, e
 
 backburner.while = (loopTestFn, loopBodyFn, context) ->
     context ?= {}
