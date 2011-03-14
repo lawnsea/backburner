@@ -1,5 +1,5 @@
 {backburner} = require('backburner')
-{Promise} = require('promise')
+{Promise} = require('backburner-promise')
 Task = backburner.Task
 
 describe 'backburner.Task', ->

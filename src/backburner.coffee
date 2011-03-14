@@ -4,20 +4,20 @@ Backburner
 (c) 2011 Lon Ingram
 All rights reserved until I decide on a license
 ###
-
-{Promise} = require('promise')
+{Promise} = require 'backburner-promise'
 backburner = {}
 
 # A Backburner Task represents some chunk of work that needs to be done
 backburner.Task = class Task extends Promise
     # Construct a new Task
     #
-    # - **fn** The function that will do this Task's work.  Required.  This Task is
-    #          made available in fn as this.thisTask
+    # - **fn** The function that will do this Task's work.  Required.  A reference
+    #          to this Task is made available in fn as this.thisTask
     # - **config** Optional configuration object
     #   - **config.context** An object that will be the value of *this* in **fn**
     #   - **config.runnable** If true, the task can be scheduled immediately
     constructor: (fn, config) ->
+        #@then()
         if not fn? then throw 'Task requires a function to call on each tick'
         config ?= {}
         @_context = if config.context? then config.context else {}
@@ -44,7 +44,7 @@ backburner.spawn = (fn, config) ->
 
 whileFn = ->
     try
-        done = not @loopTestFn()
+        done = not @_loopTestFn()
     catch e
         @rejectWith this, e
 
@@ -52,14 +52,14 @@ whileFn = ->
         @resolveWith this
     else
         try
-            @loopBodyFn
+            @_loopBodyFn
         catch e
             @resolveWith this, e
 
 backburner.while = (loopTestFn, loopBodyFn, context) ->
     context ?= {}
-    context.loopTestFn = loopTestFn
-    context.loopBodyFn = loopBodyFn
+    context._loopTestFn = loopTestFn
+    context._loopBodyFn = loopBodyFn
     backburner.spawn whileFn, { context: context }
 
 (exports ? this).backburner = backburner
