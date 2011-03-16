@@ -16,12 +16,18 @@ These are tasks and ideas that haven't been put somewhere else
 * Keep a record of which tasks have been scheduled recently for debugging purposes
 * Log to console
 * Consider adding support for more sophisticated scheduling algorithms as plugins
+* Pluggable scheduler
+* should spawn also accept a Task?
 
 Sprint 1
 ========
-* Implement:
-  * backburner.while(loopTestFn, loopBodyFn, resultFn, context) -> backburner.Task
-    * need better tests here...
-  * a simple scheduler
-* should spawn also accept a Task?
-* Tasks should be assigned a unique id and added to the scheduler's task pool
+* tests for Promise
+* tests for Deferred
+* implement Deferred
+* fix Promise API
+* Task should implement Deferred
+* spawn should return a Promise
+* write actual working tests for while
+* fix while to call @thisTask.<deferredfn>
+* a simple scheduler
+  * Tasks should be assigned a unique id and added to the scheduler's task pool
