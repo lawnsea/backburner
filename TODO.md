@@ -21,8 +21,7 @@ Sprint 1
 ========
 * Implement:
   * backburner.while(loopTestFn, loopBodyFn, resultFn, context) -> backburner.Task
+    * need better tests here...
   * a simple scheduler
 * should spawn also accept a Task?
-* Task should support chaining
-* Task should be a promise
 * Tasks should be assigned a unique id and added to the scheduler's task pool
