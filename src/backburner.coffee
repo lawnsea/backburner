@@ -4,7 +4,7 @@ Backburner
 (c) 2011 Lon Ingram
 All rights reserved until I decide on a license
 ###
-{Promise} = require 'backburner-promise'
+{Promise} = require 'backburner-deferreds'
 backburner = {}
 
 # A Backburner Task represents some chunk of work that needs to be done
