@@ -20,9 +20,13 @@ class Promise
     then: (successFns, failFns) ->
         successFns ?= []
         failFns ?= []
-        for fn in successFns
-            @_successFns.push fn
-        for fn in failFns
-            @_failFns.push fn
+        @_successFns.concat successFns
+        @_failFns.concat failFns
+
+    done: (successFns) ->
+        @then successFns
+
+    fail: (failFns) ->
+        @then [], failFns
 
 (exports ? this).Promise = Promise
