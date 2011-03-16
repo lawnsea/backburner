@@ -28,14 +28,17 @@ backburner.Task = class Task extends Promise
     # Make this task runnable
     start: ->
         @_runnable = yes
+        return this
 
     # Make this task unrunnable
     stop: ->
         @_runnable = no
+        return this
 
     # Run this task's tick function once
     tick: ->
         @_tickFn.call @_context
+        return this
 
 backburner.spawn = (fn, config) ->
     task = new Task fn, config
