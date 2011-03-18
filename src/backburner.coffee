@@ -4,11 +4,11 @@ Backburner
 (c) 2011 Lon Ingram
 All rights reserved until I decide on a license
 ###
-{Promise} = require 'backburner-deferreds'
+{Deferred} = require 'backburner-deferred'
 backburner = {}
 
 # A Backburner Task represents some chunk of work that needs to be done
-backburner.Task = class Task extends Promise
+backburner.Task = class Task extends Deferred
     # Construct a new Task
     #
     # - **fn** The function that will do this Task's work.  Required.  A reference

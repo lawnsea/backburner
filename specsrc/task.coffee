@@ -1,11 +1,11 @@
 {backburner} = require('backburner')
-{Promise} = require('backburner-deferreds')
+{Deferred} = require('backburner-deferred')
 Task = backburner.Task
 
 describe 'backburner.Task', ->
     it 'should subclass promise', ->
         task = new Task ->
-        expect(task instanceof Promise).toBe true
+        expect(task instanceof Deferred).toBe true
 
     it 'should require that the first argument to the constructor be a function', ->
         caught = false
