@@ -21,12 +21,9 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* tests for Promise
 * tests for Deferred
-* implement Deferred
-* fix Promise API
-* Task should implement Deferred
-* spawn should return a Promise
+* Task.promise() should return a TaskPromise
+* spawn should return a Task
 * write actual working tests for while
 * fix while to call @thisTask.<deferredfn>
 * a simple scheduler
