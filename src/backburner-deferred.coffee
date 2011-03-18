@@ -1,12 +1,14 @@
 class Deferred
     _rejected: false
-    _resolved: true
+    _resolved: false
 
     _successFns: []
 
     _failFns: []
 
     reject: (args...) ->
+        @_rejected = true
+        @_resolved = false
         for fn in @_failFns
             fn.apply this, args
 
@@ -14,6 +16,8 @@ class Deferred
         @reject.apply context, args
 
     resolve: (args...) ->
+        @_rejected = false
+        @_resolved = true
         for fn in @_successFns
             fn.apply this, args
 
@@ -23,8 +27,8 @@ class Deferred
     then: (successFns, failFns) ->
         successFns ?= []
         failFns ?= []
-        @_successFns.concat successFns
-        @_failFns.concat failFns
+        @_successFns = @_successFns.concat successFns
+        @_failFns = @_failFns.concat failFns
 
     done: (successFns) ->
         @then successFns
@@ -39,12 +43,18 @@ class Deferred
         @_resolved
 
     promise: ->
+        that = this
         @_promise ?=
-            then: @then
-            done: @done
-            fail: @fail
-            isRejected: @isRejected
-            isResolved: @isResolved
+            then: (successFns, failFns) ->
+                that.then successFns, failFns
+            done: (successFns) ->
+                that.done successFns
+            fail: (failFns) ->
+                that.fail failFns
+            isRejected: ->
+                that.isRejected()
+            isResolved: ->
+                that.isResolved()
         return @_promise
 
 (exports ? this).Deferred = Deferred
