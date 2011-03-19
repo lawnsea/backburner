@@ -7,6 +7,10 @@ class Deferred
     _failFns: []
 
     reject: (args...) ->
+        # XXX: this isn't going to work with rejectWith, dude...
+        #      so, you'll need to add a helper fn that takes a context arg
+        if @_rejected or @_resolved
+            return
         @_rejected = true
         @_resolved = false
         for fn in @_failFns
@@ -16,6 +20,8 @@ class Deferred
         @reject.apply context, args
 
     resolve: (args...) ->
+        if @_rejected or @_resolved
+            return
         @_rejected = false
         @_resolved = true
         for fn in @_successFns
