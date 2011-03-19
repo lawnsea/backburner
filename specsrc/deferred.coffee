@@ -1,6 +1,6 @@
 {Deferred} = require('backburner-deferred')
 
-describe 'Deferreds and their promises', ->
+describe 'Deferred and its promise', ->
     describe 'their interface', ->
         deferred = promise = 42
 
@@ -164,12 +164,12 @@ describe 'Deferreds and their promises', ->
             expect(deferred.isResolved()).toBe true
             expect(promise.isResolved()).toBe true
 
+describe 'Deferreds', ->
     describe 'reject', ->
-        deferred = promise = 42
+        deferred = 42
 
         beforeEach ->
             deferred = new Deferred
-            promise = deferred.promise()
             @addMatchers {
                 toBeAFunction: ->
                     this.actual instanceof Function
@@ -186,11 +186,10 @@ describe 'Deferreds and their promises', ->
             deferred.reject expectedArgs...
 
     describe 'rejectWith', ->
-        deferred = promise = 42
+        deferred = 42
 
         beforeEach ->
             deferred = new Deferred
-            promise = deferred.promise()
             @addMatchers {
                 toBeAFunction: ->
                     this.actual instanceof Function
@@ -245,28 +244,22 @@ describe 'Deferreds and their promises', ->
             deferred.resolveWith {}
             deferred.rejectWith {}
             expect(deferred.isResolved()).toBe true
-            expect(promise.isResolved()).toBe true
             expect(deferred.isRejected()).toBe false
-            expect(promise.isRejected()).toBe false
 
         it 'should be idempotent', ->
             deferred.rejectWith {}
             expect(deferred.isResolved()).toBe false
-            expect(promise.isResolved()).toBe false
             expect(deferred.isRejected()).toBe true
-            expect(promise.isRejected()).toBe true
+
             deferred.rejectWith {}
             expect(deferred.isResolved()).toBe false
-            expect(promise.isResolved()).toBe false
             expect(deferred.isRejected()).toBe true
-            expect(promise.isRejected()).toBe true
 
     describe 'resolve', ->
-        deferred = promise = 42
+        deferred = 42
 
         beforeEach ->
             deferred = new Deferred
-            promise = deferred.promise()
             @addMatchers {
                 toBeAFunction: ->
                     this.actual instanceof Function
@@ -283,11 +276,10 @@ describe 'Deferreds and their promises', ->
             deferred.resolve expectedArgs...
 
     describe 'resolveWith', ->
-        deferred = promise = 42
+        deferred = 42
 
         beforeEach ->
             deferred = new Deferred
-            promise = deferred.promise()
             @addMatchers {
                 toBeAFunction: ->
                     this.actual instanceof Function
@@ -343,18 +335,27 @@ describe 'Deferreds and their promises', ->
             deferred.rejectWith {}
             deferred.resolveWith {}
             expect(deferred.isResolved()).toBe false
-            expect(promise.isResolved()).toBe false
             expect(deferred.isRejected()).toBe true
-            expect(promise.isRejected()).toBe true
 
         it 'should be idempotent', ->
             deferred.resolveWith {}
             expect(deferred.isResolved()).toBe true
-            expect(promise.isResolved()).toBe true
             expect(deferred.isRejected()).toBe false
-            expect(promise.isRejected()).toBe false
+
             deferred.resolveWith {}
             expect(deferred.isResolved()).toBe true
-            expect(promise.isResolved()).toBe true
             expect(deferred.isRejected()).toBe false
-            expect(promise.isRejected()).toBe false
+
+    describe 'promise', ->
+        deferred = 42
+
+        beforeEach ->
+            deferred = new Deferred
+            @addMatchers {
+                toBeAFunction: ->
+                    this.actual instanceof Function
+                }
+
+        it 'should always return the same promise', ->
+            promise = deferred.promise()
+            expect(deferred.promise()).toBe promise
