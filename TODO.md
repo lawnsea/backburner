@@ -23,6 +23,8 @@ These are tasks and ideas that haven't been put somewhere else
 Sprint 1
 ========
 * tests for Deferred
+  * ensure that done, fail and then call their callbacks when rejected and resolved
+  * ensure that promise returns a promise
 * Task.promise() should return a TaskPromise
 * spawn should return a Task
 * write actual working tests for while

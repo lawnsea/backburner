@@ -106,16 +106,12 @@ describe 'Deferreds and their promises', ->
         
         it 'should register callbacks on deferreds', ->
             failFn = ->
-
             deferred.fail [failFn]
-
             expect(failFn in deferred._failFns).toBe true
 
         it 'should register callbacks on promises', ->
             failFn = ->
-
             promise.fail [failFn]
-
             expect(failFn in deferred._failFns).toBe true
     
     describe 'isRejected', ->
@@ -199,6 +195,32 @@ describe 'Deferreds and their promises', ->
             expect(deferred.isRejected()).toBe true
             expect(promise.isRejected()).toBe true
 
+    describe 'rejectWith', ->
+        deferred = promise = 42
+
+        beforeEach ->
+            deferred = new Deferred
+            promise = deferred.promise()
+            @addMatchers {
+                toBeAFunction: ->
+                    this.actual instanceof Function
+                }
+
+        it 'should execute handlers with the correct context', ->
+            context = {}
+            deferred.fail (actualArgs...) ->
+                expect(this).toBe context
+            deferred.rejectWith context
+
+        it 'should pass args to handlers', ->
+            expectedArgs = [23, 42, 'foo']
+            deferred.fail (actualArgs...) ->
+                i = 0
+                for arg in actualArgs
+                    expect(arg).toBe expectedArgs[i]
+                    i++
+            deferred.rejectWith {}, expectedArgs...
+
     describe 'resolve', ->
         deferred = promise = 42
 
@@ -229,3 +251,30 @@ describe 'Deferreds and their promises', ->
             expect(promise.isResolved()).toBe true
             expect(deferred.isRejected()).toBe false
             expect(promise.isRejected()).toBe false
+
+    describe 'resolveWith', ->
+        deferred = promise = 42
+
+        beforeEach ->
+            deferred = new Deferred
+            promise = deferred.promise()
+            @addMatchers {
+                toBeAFunction: ->
+                    this.actual instanceof Function
+                }
+
+        it 'should execute handlers with the correct context', ->
+            context = {}
+            deferred.done (actualArgs...) ->
+                expect(this).toBe context
+            deferred.resolveWith context
+
+        # XXX: this should be a resolveWith test
+        it 'should pass args to handlers', ->
+            expectedArgs = [23, 42, 'foo']
+            deferred.done (actualArgs...) ->
+                i = 0
+                for arg in actualArgs
+                    expect(arg).toBe expectedArgs[i]
+                    i++
+            deferred.resolve expectedArgs...
