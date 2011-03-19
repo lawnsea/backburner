@@ -174,26 +174,16 @@ describe 'Deferreds and their promises', ->
                 toBeAFunction: ->
                     this.actual instanceof Function
                 }
-
-        it 'should have no effect if already resolved', ->
-            deferred.resolve()
-            deferred.reject()
-            expect(deferred.isResolved()).toBe true
-            expect(promise.isResolved()).toBe true
-            expect(deferred.isRejected()).toBe false
-            expect(promise.isRejected()).toBe false
-
-        it 'should be idempotent', ->
-            deferred.reject()
-            expect(deferred.isResolved()).toBe false
-            expect(promise.isResolved()).toBe false
-            expect(deferred.isRejected()).toBe true
-            expect(promise.isRejected()).toBe true
-            deferred.reject()
-            expect(deferred.isResolved()).toBe false
-            expect(promise.isResolved()).toBe false
-            expect(deferred.isRejected()).toBe true
-            expect(promise.isRejected()).toBe true
+        
+        it 'should call rejectWith with context === the Deferred', ->
+            expectedArgs = [23, 42, 'foo']
+            deferred.rejectWith = (context, args...) ->
+                expect(context).toBe deferred
+                i = 0
+                for arg in args
+                    expect(arg).toBe expectedArgs[i]
+                    i++
+            deferred.reject expectedArgs...
 
     describe 'rejectWith', ->
         deferred = promise = 42
@@ -205,6 +195,36 @@ describe 'Deferreds and their promises', ->
                 toBeAFunction: ->
                     this.actual instanceof Function
                 }
+
+        it 'should call all failure handlers', ->
+            called = [false, false, false, false]
+            fns = [
+                -> called[0] = true,
+                -> called[1] = true,
+                -> called[2] = true,
+                -> called[3] = true,
+            ]
+            deferred.fail fns[0..1]
+            deferred.then [], fns[2..3]
+            deferred.rejectWith {}
+
+            for call in called
+                expect(call).toBe true
+
+        it 'should not call success handlers', ->
+            called = [false, false, false, false]
+            fns = [
+                -> called[0] = true,
+                -> called[1] = true,
+                -> called[2] = true,
+                -> called[3] = true,
+            ]
+            deferred.done fns[0..1]
+            deferred.then fns[2..3]
+            deferred.rejectWith {}
+
+            for call in called
+                expect(call).toBe false
 
         it 'should execute handlers with the correct context', ->
             context = {}
@@ -221,6 +241,26 @@ describe 'Deferreds and their promises', ->
                     i++
             deferred.rejectWith {}, expectedArgs...
 
+        it 'should have no effect if already resolved', ->
+            deferred.resolveWith {}
+            deferred.rejectWith {}
+            expect(deferred.isResolved()).toBe true
+            expect(promise.isResolved()).toBe true
+            expect(deferred.isRejected()).toBe false
+            expect(promise.isRejected()).toBe false
+
+        it 'should be idempotent', ->
+            deferred.rejectWith {}
+            expect(deferred.isResolved()).toBe false
+            expect(promise.isResolved()).toBe false
+            expect(deferred.isRejected()).toBe true
+            expect(promise.isRejected()).toBe true
+            deferred.rejectWith {}
+            expect(deferred.isResolved()).toBe false
+            expect(promise.isResolved()).toBe false
+            expect(deferred.isRejected()).toBe true
+            expect(promise.isRejected()).toBe true
+
     describe 'resolve', ->
         deferred = promise = 42
 
@@ -231,26 +271,16 @@ describe 'Deferreds and their promises', ->
                 toBeAFunction: ->
                     this.actual instanceof Function
                 }
-
-        it 'should have no effect if already rejected', ->
-            deferred.reject()
-            deferred.resolve()
-            expect(deferred.isResolved()).toBe false
-            expect(promise.isResolved()).toBe false
-            expect(deferred.isRejected()).toBe true
-            expect(promise.isRejected()).toBe true
-
-        it 'should be idempotent', ->
-            deferred.resolve()
-            expect(deferred.isResolved()).toBe true
-            expect(promise.isResolved()).toBe true
-            expect(deferred.isRejected()).toBe false
-            expect(promise.isRejected()).toBe false
-            deferred.resolve()
-            expect(deferred.isResolved()).toBe true
-            expect(promise.isResolved()).toBe true
-            expect(deferred.isRejected()).toBe false
-            expect(promise.isRejected()).toBe false
+        
+        it 'should call resolveWith with context === the Deferred', ->
+            expectedArgs = [23, 42, 'foo']
+            deferred.resolveWith = (context, args...) ->
+                expect(context).toBe deferred
+                i = 0
+                for arg in args
+                    expect(arg).toBe expectedArgs[i]
+                    i++
+            deferred.resolve expectedArgs...
 
     describe 'resolveWith', ->
         deferred = promise = 42
@@ -262,6 +292,36 @@ describe 'Deferreds and their promises', ->
                 toBeAFunction: ->
                     this.actual instanceof Function
                 }
+
+        it 'should call all success handlers', ->
+            called = [false, false, false, false]
+            fns = [
+                -> called[0] = true,
+                -> called[1] = true,
+                -> called[2] = true,
+                -> called[3] = true,
+            ]
+            deferred.done fns[0..1]
+            deferred.then fns[2..3]
+            deferred.resolveWith {}
+
+            for call in called
+                expect(call).toBe true
+
+        it 'should not call failure handlers', ->
+            called = [false, false, false, false]
+            fns = [
+                -> called[0] = true,
+                -> called[1] = true,
+                -> called[2] = true,
+                -> called[3] = true,
+            ]
+            deferred.fail fns[0..1]
+            deferred.then [], fns[2..3]
+            deferred.resolveWith {}
+
+            for call in called
+                expect(call).toBe false
 
         it 'should execute handlers with the correct context', ->
             context = {}
@@ -277,4 +337,24 @@ describe 'Deferreds and their promises', ->
                 for arg in actualArgs
                     expect(arg).toBe expectedArgs[i]
                     i++
-            deferred.resolve expectedArgs...
+            deferred.resolveWith {}, expectedArgs...
+
+        it 'should have no effect if already rejected', ->
+            deferred.rejectWith {}
+            deferred.resolveWith {}
+            expect(deferred.isResolved()).toBe false
+            expect(promise.isResolved()).toBe false
+            expect(deferred.isRejected()).toBe true
+            expect(promise.isRejected()).toBe true
+
+        it 'should be idempotent', ->
+            deferred.resolveWith {}
+            expect(deferred.isResolved()).toBe true
+            expect(promise.isResolved()).toBe true
+            expect(deferred.isRejected()).toBe false
+            expect(promise.isRejected()).toBe false
+            deferred.resolveWith {}
+            expect(deferred.isResolved()).toBe true
+            expect(promise.isResolved()).toBe true
+            expect(deferred.isRejected()).toBe false
+            expect(promise.isRejected()).toBe false
