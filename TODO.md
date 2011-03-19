@@ -18,6 +18,7 @@ These are tasks and ideas that haven't been put somewhere else
 * Consider adding support for more sophisticated scheduling algorithms as plugins
 * Pluggable scheduler
 * should spawn also accept a Task?
+* fix tests to read as English phrases
 
 Sprint 1
 ========
