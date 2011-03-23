@@ -14,6 +14,7 @@ describeTaskPromise = (promiseFactory, name) ->
 exports.describeTaskPromise = describeTaskPromise
 
 describe 'backburner.Task', ->
+    # TODO: if anything public other than Task() returns a task, refactor as describeTask
     describeDeferred -> new Deferred
 
     it 'should require that the first argument to the constructor be a function', ->
