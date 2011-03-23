@@ -40,6 +40,16 @@ backburner.Task = class Task extends Deferred
         @_tickFn.call @_context
         return this
 
+    # Return the TaskPromise for this Task
+    promise: ->
+        if not @_promise?
+            super
+            @_promise.start = this.start
+            @_promise.stop = this.stop
+            #@_promise.join = this.join
+            #@_promise.kill = this.kill
+        return @_promise
+
 backburner.spawn = (fn, config) ->
     task = new Task fn, config
     task.start()

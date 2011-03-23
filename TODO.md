@@ -22,7 +22,7 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* refactor specsrc/task.js in the mode of deferred
+* add isRunnable to the interface of TaskPromise
 * spawn should return a TaskPromise
 * write actual working tests for while
 * fix while to call @thisTask.<deferredfn>

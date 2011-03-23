@@ -1,9 +1,17 @@
-{describeDeferred} = require('deferred')
+{describeDeferred, describePromise} = require('deferred')
 
 {backburner} = require('backburner')
 {Deferred} = require('backburner-deferred')
 
 Task = backburner.Task
+
+describeTaskPromise = (promiseFactory, name) ->
+    [promise, resolveFn, rejectFn] = promiseFactory()
+    name ?= promise.constructor.name
+    describe name + ' implements TaskPromise and ', ->
+        describePromise ->
+            return promiseFactory()
+exports.describeTaskPromise = describeTaskPromise
 
 describe 'backburner.Task', ->
     describeDeferred -> new Deferred
@@ -60,3 +68,15 @@ describe 'backburner.Task', ->
 
             task = new Task fn
             task.tick()
+
+    describe 'promise', ->
+            beforeEach ->
+                fn = ->
+                task = new Task fn
+
+            describeTaskPromise ->
+                    fn = ->
+                    task = new Task fn
+                    return [task.promise(), (-> task.resolve()), (-> task.reject())]
+                , 'The result of Task.promise()'
+
