@@ -22,8 +22,8 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* Task.promise() should return a TaskPromise
-* spawn should return a Task
+* refactor specsrc/task.js in the mode of deferred
+* spawn should return a TaskPromise
 * write actual working tests for while
 * fix while to call @thisTask.<deferredfn>
 * a simple scheduler
