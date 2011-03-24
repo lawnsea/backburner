@@ -1,6 +1,6 @@
 {Deferred} = require('backburner-deferred')
 
-callTrackingFn = -> 
+callTrackingFn = ->
     return ->
         arguments.callee.called = true
 
