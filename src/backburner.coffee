@@ -25,6 +25,10 @@ backburner.Task = class Task extends Deferred
         @_runnable = config.runnable == true
         @_tickFn = fn
 
+    # Returns true if this task is runnable
+    isRunnable: ->
+        return @_runnable is true
+
     # Make this task runnable
     start: ->
         @_runnable = yes
@@ -44,10 +48,7 @@ backburner.Task = class Task extends Deferred
     promise: ->
         if not @_promise?
             super
-            @_promise.start = this.start
-            @_promise.stop = this.stop
-            #@_promise.join = this.join
-            #@_promise.kill = this.kill
+            # TODO: join and kill
         return @_promise
 
 backburner.spawn = (fn, config) ->
