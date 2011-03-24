@@ -19,10 +19,12 @@ describePromise = (promiseFactory, name) ->
 
                 promise.then [successFn1]
                 promise.then [successFn2], [failFn]
-                resolveFn()
 
-                expect(successFn1.called).toBe true
-                expect(successFn2.called).toBe true
+                runs resolveFn
+                waits 1
+                runs ->
+                    expect(successFn1.called).toBe true
+                    expect(successFn2.called).toBe true
 
             it 'should register failure callbacks', ->
                 successFn = callTrackingFn()
@@ -31,10 +33,12 @@ describePromise = (promiseFactory, name) ->
 
                 promise.then [], [failFn1]
                 promise.then [successFn], [failFn2]
-                rejectFn()
 
-                expect(failFn1.called).toBe true
-                expect(failFn2.called).toBe true
+                runs rejectFn
+                waits 1
+                runs ->
+                    expect(failFn1.called).toBe true
+                    expect(failFn2.called).toBe true
 
         describe 'provides done', ->
             beforeEach ->
@@ -44,9 +48,11 @@ describePromise = (promiseFactory, name) ->
                 successFn = callTrackingFn()
 
                 promise.done [successFn]
-                resolveFn()
 
-                expect(successFn.called).toBe true
+                runs resolveFn
+                waits 1
+                runs ->
+                    expect(successFn.called).toBe true
 
         describe 'provides fail', ->
             beforeEach ->
@@ -56,9 +62,11 @@ describePromise = (promiseFactory, name) ->
                 failFn = callTrackingFn()
 
                 promise.fail [failFn]
-                rejectFn()
 
-                expect(failFn.called).toBe true
+                runs rejectFn
+                waits 1
+                runs ->
+                    expect(failFn.called).toBe true
     
         describe 'provides isRejected', ->
             beforeEach ->
@@ -68,12 +76,16 @@ describePromise = (promiseFactory, name) ->
                 expect(promise.isRejected()).toBe false
 
             it 'should return false if resolved', ->
-                resolveFn()
-                expect(promise.isRejected()).toBe false
+                runs resolveFn
+                waits 1
+                runs ->
+                    expect(promise.isRejected()).toBe false
 
             it 'should return true if rejected', ->
-                rejectFn()
-                expect(promise.isRejected()).toBe true
+                runs rejectFn
+                waits 1
+                runs ->
+                    expect(promise.isRejected()).toBe true
         
         describe 'provides isResolved', ->
             beforeEach ->
@@ -83,12 +95,16 @@ describePromise = (promiseFactory, name) ->
                 expect(promise.isResolved()).toBe false
 
             it 'should return false if rejected', ->
-                rejectFn()
-                expect(promise.isResolved()).toBe false
+                runs rejectFn
+                waits 1
+                runs ->
+                    expect(promise.isResolved()).toBe false
 
             it 'should return true if resolved', ->
-                resolveFn()
-                expect(promise.isResolved()).toBe true
+                runs resolveFn
+                waits 1
+                runs ->
+                    expect(promise.isResolved()).toBe true
 exports.describePromise = describePromise
 
 describePromise ->
