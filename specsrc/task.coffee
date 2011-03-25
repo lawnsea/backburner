@@ -1,9 +1,7 @@
 {describeDeferred, describePromise} = require('deferred')
 
-{backburner} = require('backburner')
+{Task} = require('backburner')
 {Deferred} = require('backburner-deferred')
-
-Task = backburner.Task
 
 describeTaskPromise = (promiseFactory, name) ->
     [promise, resolveFn, rejectFn] = promiseFactory()

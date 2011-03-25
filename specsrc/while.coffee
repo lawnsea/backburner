@@ -1,4 +1,4 @@
-{backburner} = require('backburner')
+backburner = require('backburner')
 #{Promise} = require 'backburner-promise'
 {Task} = backburner
 

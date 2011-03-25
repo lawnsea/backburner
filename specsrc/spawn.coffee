@@ -1,5 +1,6 @@
-{backburner} = require('backburner')
-{Task, spawn} = backburner
+{describeTaskPromise} = require('task')
+
+{Task, spawn} = require('backburner')
 
 describe 'backburner.spawn', ->
     beforeEach ->
@@ -8,11 +9,25 @@ describe 'backburner.spawn', ->
                 this.actual instanceof Task
             }
 
-    it 'should accept a function and optional config and return a runnable Task', ->
-        fn = ->
-        context = {}
-        task = spawn fn, { context: context }
-        expect(task).toBeATask()
-        expect(task._tickFn).toBe fn
-        expect(task._context).toBe context
-        expect(task._runnable).toBe true
+    # Ok, so, TaskPromise won't let us resolve/reject it and spawn doesn't
+    # give us a way to do so.  The solution is to use the tickFn to do so, 
+    # but that requires the scheduler to work.  So... some of these tests
+    # will fail until you implement a scheduler.
+###
+    describeTaskPromise ->
+            reject = false
+            resolve = false
+            resolveFn = ->
+                resolve = true
+            rejectFn = ->
+                reject = true
+            fn = ->
+                if reject
+                    @reject()
+                else if resolve
+                    @resolve()
+
+            promise = spawn fn
+            return [promise, resolveFn, rejectFn]
+        , 'The result of spawn()'
+###

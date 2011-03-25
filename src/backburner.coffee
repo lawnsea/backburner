@@ -76,4 +76,6 @@ backburner.while = (loopTestFn, loopBodyFn, context) ->
     context._loopBodyFn = loopBodyFn
     backburner.spawn whileFn, { context: context }
 
-(exports ? this).backburner = backburner
+(exports ? this).Task = backburner.Task
+(exports ? this).spawn = backburner.spawn
+(exports ? this).while = backburner.while

@@ -1,4 +1,4 @@
-{backburner} = require('backburner')
+backburner = require('backburner')
 
 describe 'backburner interface', ->
     beforeEach ->
