@@ -26,11 +26,6 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* a simple scheduler
-  * this might be more easily testable if we break it out as a separate file
-  * first cut scheduler does round-robin with no priorities
-  * Tasks should be assigned a unique id and added to the scheduler's task pool
-  * scheduler should start automatically if a task is added and it isn't running
 * spawn should return a TaskPromise
   * not testable until we implement a scheduler
 * write actual working tests for while
