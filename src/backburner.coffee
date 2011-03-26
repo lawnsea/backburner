@@ -5,6 +5,7 @@ Backburner
 All rights reserved until I decide on a license
 ###
 {Deferred} = require 'backburner-deferred'
+{scheduler} = require 'backburner-scheduler'
 backburner = {}
 
 # A Backburner Task represents some chunk of work that needs to be done
@@ -54,6 +55,7 @@ backburner.Task = class Task extends Deferred
 backburner.spawn = (fn, config) ->
     task = new Task fn, config
     task.start()
+    scheduler.exec task
     return task
 
 whileFn = ->
