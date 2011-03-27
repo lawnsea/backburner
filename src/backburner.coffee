@@ -81,3 +81,5 @@ backburner.while = (loopTestFn, loopBodyFn, context) ->
 (exports ? this).Task = backburner.Task
 (exports ? this).spawn = backburner.spawn
 (exports ? this).while = backburner.while
+(exports ? this).killAll = ->
+    scheduler.killAll()
