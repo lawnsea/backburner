@@ -56,7 +56,7 @@ backburner.spawn = (fn, config) ->
     task = new Task fn, config
     task.start()
     scheduler.exec task
-    return task
+    return task.promise()
 
 whileFn = ->
     try

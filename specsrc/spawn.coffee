@@ -3,31 +3,17 @@
 {Task, spawn} = require('backburner')
 
 describe 'backburner.spawn', ->
-    beforeEach ->
-        @addMatchers {
-            toBeATask: ->
-                this.actual instanceof Task
-            }
-
-    # Ok, so, TaskPromise won't let us resolve/reject it and spawn doesn't
-    # give us a way to do so.  The solution is to use the tickFn to do so, 
-    # but that requires the scheduler to work.  So... some of these tests
-    # will fail until you implement a scheduler.
-###
     describeTaskPromise ->
-            reject = false
+            # TODO: look at deferred code to get this test right...
             resolve = false
-            resolveFn = ->
-                resolve = true
-            rejectFn = ->
-                reject = true
+            reject = false
             fn = ->
-                if reject
-                    @reject()
-                else if resolve
-                    @resolve()
-
-            promise = spawn fn
-            return [promise, resolveFn, rejectFn]
+                if resolve
+                    @thisTask.resolve()
+                    @thisTask.stop()
+                else if reject
+                    @thisTask.reject()
+                    @thisTask.stop()
+            p = spawn fn
+            return [p, (-> resolve = true), (-> reject = true)]
         , 'The result of spawn()'
-###
