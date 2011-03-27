@@ -62,15 +62,15 @@ whileFn = ->
     try
         done = not @_loopTestFn()
     catch e
-        @rejectWith this, e
+        @thisTask.rejectWith this, e
 
     if done
-        @resolveWith this
+        @thisTask.resolveWith this
     else
         try
-            @_loopBodyFn
+            @_loopBodyFn()
         catch e
-            @rejectWith this, e
+            @thisTask.rejectWith this, e
 
 backburner.while = (loopTestFn, loopBodyFn, context) ->
     context ?= {}
