@@ -26,7 +26,11 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* spawn should return a TaskPromise
-  * not testable until we implement a scheduler
 * write actual working tests for while
-* fix while to call @thisTask.<deferredfn>
+* fix tests to clean up their tasks using killAll
+* implement Task.kill
+  * Tasks should kill themselves when resolved or rejected
+* rename while as whilst
+  * or, instead just import it as awhile and similary for for: afor, etc
+* create test utils module with callTrackingFn, etc.
+* look at using underscore
