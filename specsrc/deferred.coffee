@@ -1,4 +1,5 @@
 {Deferred} = require('backburner-deferred')
+WAIT_TIME = 50
 
 callTrackingFn = ->
     return ->
@@ -21,7 +22,7 @@ describePromise = (promiseFactory, name) ->
                 promise.then [successFn2], [failFn]
 
                 runs resolveFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(successFn1.called).toBe true
                     expect(successFn2.called).toBe true
@@ -35,7 +36,7 @@ describePromise = (promiseFactory, name) ->
                 promise.then [successFn], [failFn2]
 
                 runs rejectFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(failFn1.called).toBe true
                     expect(failFn2.called).toBe true
@@ -50,7 +51,7 @@ describePromise = (promiseFactory, name) ->
                 promise.done [successFn]
 
                 runs resolveFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(successFn.called).toBe true
 
@@ -64,7 +65,7 @@ describePromise = (promiseFactory, name) ->
                 promise.fail [failFn]
 
                 runs rejectFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(failFn.called).toBe true
     
@@ -77,13 +78,13 @@ describePromise = (promiseFactory, name) ->
 
             it 'should return false if resolved', ->
                 runs resolveFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(promise.isRejected()).toBe false
 
             it 'should return true if rejected', ->
                 runs rejectFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(promise.isRejected()).toBe true
         
@@ -96,13 +97,13 @@ describePromise = (promiseFactory, name) ->
 
             it 'should return false if rejected', ->
                 runs rejectFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(promise.isResolved()).toBe false
 
             it 'should return true if resolved', ->
                 runs resolveFn
-                waits 1
+                waits WAIT_TIME
                 runs ->
                     expect(promise.isResolved()).toBe true
 exports.describePromise = describePromise
