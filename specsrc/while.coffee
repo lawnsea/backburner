@@ -4,10 +4,6 @@ WAIT_TIME = 1000
 
 backburner = require('backburner')
 
-callTrackingFn = ->
-    return ->
-        arguments.callee.called = true
-
 describe 'backburner.while', ->
     backburner.killAll()
     afterEach = ->
@@ -38,7 +34,7 @@ describe 'backburner.while', ->
     it 'should call the loop body if the loop test returns true', ->
         testFn = ->
             return true
-        bodyFn = callTrackingFn()
+        bodyFn = trackCalls()
         p = backburner.while testFn, bodyFn
         waitsFor (-> bodyFn.called), 'bodyFn was never called', WAIT_TIME
         runs ->
@@ -49,7 +45,7 @@ describe 'backburner.while', ->
         testFn = ->
             called = true
             return false
-        bodyFn = callTrackingFn()
+        bodyFn = trackCalls()
         p = backburner.while testFn, bodyFn
         p.done (e) ->
             expect(bodyFn.called).not.toBe true

@@ -1,9 +1,7 @@
+{trackCalls} = require('spec-utils')
+
 {scheduler} = require 'backburner-scheduler'
 {Task} = require 'backburner'
-
-callTrackingFn = ->
-    return ->
-        arguments.callee.called = true
 
 describe 'Scheduler', ->
     beforeEach ->
@@ -13,9 +11,9 @@ describe 'Scheduler', ->
             scheduler.killAll()
 
         it 'should execute passed Tasks when runnable', ->
-            fn1 = callTrackingFn()
+            fn1 = trackCalls()
             task1 = new Task fn1, runnable: true
-            fn2 = callTrackingFn()
+            fn2 = trackCalls()
             task2 = new Task fn2
 
             runs ->
@@ -31,9 +29,9 @@ describe 'Scheduler', ->
                 expect(fn2.called).toBe true
 
         it 'should not execute passed Tasks when not runnable', ->
-            fn1 = callTrackingFn()
+            fn1 = trackCalls()
             task1 = new Task fn1, runnable: true
-            fn2 = callTrackingFn()
+            fn2 = trackCalls()
             task2 = new Task fn2
 
             runs ->
@@ -50,7 +48,7 @@ describe 'Scheduler', ->
                 expect(fn1.called).not.toBe true
 
         it 'should start the scheduler when a task is added if autostart is true', ->
-            fn = callTrackingFn()
+            fn = trackCalls()
             task = new Task fn, runnable: true
             
             scheduler.stop()
@@ -59,7 +57,7 @@ describe 'Scheduler', ->
             expect(scheduler.isRunning()).toBe true
 
         it 'should not start the scheduler when a task is added if autostart is false', ->
-            fn = callTrackingFn()
+            fn = trackCalls()
             task = new Task fn, runnable: true
             
             scheduler.stop()
@@ -72,9 +70,9 @@ describe 'Scheduler', ->
             scheduler.killAll()
 
         it 'should kill any tasks passed to it', ->
-            fn1 = callTrackingFn()
+            fn1 = trackCalls()
             task1 = new Task fn1, runnable: true
-            fn2 = callTrackingFn()
+            fn2 = trackCalls()
             task2 = new Task fn2, runnable: true
 
             runs ->
@@ -91,9 +89,9 @@ describe 'Scheduler', ->
                 expect(fn2.called).not.toBe true
 
         it 'should not kill any tasks not passed to it', ->
-            fn1 = callTrackingFn()
+            fn1 = trackCalls()
             task1 = new Task fn1, runnable: true
-            fn2 = callTrackingFn()
+            fn2 = trackCalls()
             task2 = new Task fn2, runnable: true
 
             runs ->
@@ -113,9 +111,9 @@ describe 'Scheduler', ->
             scheduler.killAll()
 
         it 'should kill all tasks', ->
-            fn1 = callTrackingFn()
+            fn1 = trackCalls()
             task1 = new Task fn1, runnable: true
-            fn2 = callTrackingFn()
+            fn2 = trackCalls()
             task2 = new Task fn2, runnable: true
 
             runs ->
