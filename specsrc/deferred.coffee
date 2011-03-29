@@ -1,8 +1,7 @@
 {Deferred} = require('backburner-deferred')
 
 {trackCalls} = require('spec-utils')
-WAIT_TIME = 100
-WAIT_TIME2 = 1000
+WAIT_TIME = 1000
 
 callTrackingFn = ->
     return ->
