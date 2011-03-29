@@ -1,11 +1,7 @@
-{Deferred} = require('backburner-deferred')
-
 {trackCalls} = require('spec-utils')
 WAIT_TIME = 1000
 
-callTrackingFn = ->
-    return ->
-        arguments.callee.called = true
+{Deferred} = require('backburner-deferred')
 
 describePromise = (promiseFactory, name) ->
     [promise, resolveFn, rejectFn] = promiseFactory()
@@ -62,7 +58,7 @@ describePromise = (promiseFactory, name) ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
             it 'should register failure callbacks', ->
-                failFn = callTrackingFn()
+                failFn = trackCalls()
 
                 promise.fail [failFn]
 
