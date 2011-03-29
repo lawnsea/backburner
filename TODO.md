@@ -26,11 +26,10 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* write actual working tests for while
-* fix tests to clean up their tasks using killAll
+* fix calls to then, done and fail in while tests (should be passing an array, not an fn)
+* Scheduler.kill should reject killed tasks
 * implement Task.kill
   * Tasks should kill themselves when resolved or rejected
 * rename while as whilst
   * or, instead just import it as awhile and similary for for: afor, etc
-* create test utils module with callTrackingFn, etc.
 * look at using underscore
