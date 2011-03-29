@@ -1,8 +1,12 @@
 {describeTaskPromise} = require('task')
 
-{Task, spawn} = require('backburner')
+backburner = require('backburner')
 
 describe 'backburner.spawn', ->
+    backburner.killAll()
+    afterEach = ->
+        backburner.killAll()
+
     describeTaskPromise ->
             resolve = false
             reject = false
@@ -13,6 +17,6 @@ describe 'backburner.spawn', ->
                 else if reject
                     @thisTask.reject()
                     @thisTask.stop()
-            p = spawn fn
+            p = backburner.spawn fn
             return [p, (-> resolve = true), (-> reject = true)]
         , 'The result of spawn()'
