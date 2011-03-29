@@ -1,5 +1,8 @@
 {Deferred} = require('backburner-deferred')
-WAIT_TIME = 50
+
+{trackCalls} = require('spec-utils')
+WAIT_TIME = 100
+WAIT_TIME2 = 1000
 
 callTrackingFn = ->
     return ->
@@ -14,29 +17,29 @@ describePromise = (promiseFactory, name) ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
             it 'should register success callbacks', ->
-                successFn1 = callTrackingFn()
-                successFn2 = callTrackingFn()
-                failFn = callTrackingFn()
+                successFn1 = trackCalls()
+                successFn2 = trackCalls()
+                failFn = trackCalls()
 
                 promise.then [successFn1]
                 promise.then [successFn2], [failFn]
 
                 runs resolveFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isResolved()), 'promise to resolve', WAIT_TIME
                 runs ->
                     expect(successFn1.called).toBe true
                     expect(successFn2.called).toBe true
 
             it 'should register failure callbacks', ->
-                successFn = callTrackingFn()
-                failFn1 = callTrackingFn()
-                failFn2 = callTrackingFn()
+                successFn = trackCalls()
+                failFn1 = trackCalls()
+                failFn2 = trackCalls()
 
                 promise.then [], [failFn1]
                 promise.then [successFn], [failFn2]
 
                 runs rejectFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isRejected()), 'promise to reject', WAIT_TIME
                 runs ->
                     expect(failFn1.called).toBe true
                     expect(failFn2.called).toBe true
@@ -46,12 +49,12 @@ describePromise = (promiseFactory, name) ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
             it 'should register success callbacks', ->
-                successFn = callTrackingFn()
+                successFn = trackCalls()
 
                 promise.done [successFn]
 
                 runs resolveFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isResolved()), 'promise to resolve', WAIT_TIME
                 runs ->
                     expect(successFn.called).toBe true
 
@@ -65,7 +68,7 @@ describePromise = (promiseFactory, name) ->
                 promise.fail [failFn]
 
                 runs rejectFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isRejected()), 'promise to reject', WAIT_TIME
                 runs ->
                     expect(failFn.called).toBe true
     
@@ -78,13 +81,13 @@ describePromise = (promiseFactory, name) ->
 
             it 'should return false if resolved', ->
                 runs resolveFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isResolved()), 'promise to resolve', WAIT_TIME
                 runs ->
                     expect(promise.isRejected()).toBe false
 
             it 'should return true if rejected', ->
                 runs rejectFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isRejected()), 'promise to reject', WAIT_TIME
                 runs ->
                     expect(promise.isRejected()).toBe true
         
@@ -97,13 +100,13 @@ describePromise = (promiseFactory, name) ->
 
             it 'should return false if rejected', ->
                 runs rejectFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isRejected()), 'promise to reject', WAIT_TIME
                 runs ->
                     expect(promise.isResolved()).toBe false
 
             it 'should return true if resolved', ->
                 runs resolveFn
-                waits WAIT_TIME
+                waitsFor (-> promise.isResolved()), 'promise to resolve', WAIT_TIME
                 runs ->
                     expect(promise.isResolved()).toBe true
 exports.describePromise = describePromise
