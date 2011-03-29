@@ -9,3 +9,6 @@ Backburner is a library that provides support for cooperative multitasking in Ja
 
 Backburner was inspired by Dave Herman's jstask.js (https://github.com/dherman/jstask),
 but is designed to work in any JavaScript runtime environment targeted by CoffeeScript.
+
+Backburner is alpha software under active development. Neither its API or implementation
+are stable.  I hope to release 0.1 in the next few weeks.
