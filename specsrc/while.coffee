@@ -1,4 +1,5 @@
 {describeTaskPromise} = require('task')
+{trackCalls} = require('spec-utils')
 WAIT_TIME = 1000
 
 backburner = require('backburner')
@@ -6,12 +7,6 @@ backburner = require('backburner')
 callTrackingFn = ->
     return ->
         arguments.callee.called = true
-
-trackCalls = (fn) ->
-    fn ?= ->
-    return ->
-        arguments.callee.called = true
-        return fn.apply this, arguments
 
 describe 'backburner.while', ->
     backburner.killAll()
@@ -83,9 +78,9 @@ describe 'backburner.while', ->
     it 'should not resolve if the loop test returns true', ->
         testFn = ->
             return true
-        bodyFn = ->
+        bodyFn = trackCalls()
         p = backburner.while testFn, bodyFn
-        waits WAIT_TIME
+        waitsFor (-> bodyFn.called), 'bodyFn was never called', WAIT_TIME
         runs ->
             expect(p.isResolved()).not.toBe true
 
