@@ -1,9 +1,7 @@
 ###
 Backburner
-
-(c) 2011 Lon Ingram
-All rights reserved until I decide on a license
 ###
+
 {Deferred} = require 'backburner-deferred'
 {scheduler} = require 'backburner-scheduler'
 backburner = {}
