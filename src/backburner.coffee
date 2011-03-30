@@ -43,6 +43,14 @@ backburner.Task = class Task extends Deferred
         @_tickFn.call @_context
         return this
 
+    # Resolve this task
+    resolve: (args...) ->
+        return @resolveWith @_context, args...
+
+    # Reject this task
+    reject: (args...) ->
+        return @rejectWith @_context, args...
+
     # Return the TaskPromise for this Task
     promise: ->
         if not @_promise?

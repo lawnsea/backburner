@@ -68,6 +68,40 @@ describe 'backburner.Task', ->
             task = new Task fn
             task.tick()
 
+    describe 'resolve', ->
+        it 'should call success functions with the correct context', ->
+            context = {}
+            fn = ->
+            task = new Task fn, {context: context}
+            task.done ->
+                expect(this).toBe context
+            task.resolve()
+
+        it 'should call success functions with the correct arguments', ->
+            fn = ->
+            task = new Task fn
+            task.done (args...) ->
+                expect(args[0]).toBe 23
+                expect(args[1]).toBe 42
+            task.resolve(23, 42)
+
+    describe 'reject', ->
+        it 'should call failure functions with the correct context', ->
+            context = {}
+            fn = ->
+            task = new Task fn, {context: context}
+            task.fail ->
+                expect(this).toBe context
+            task.reject()
+
+        it 'should call failure functions with the correct arguments', ->
+            fn = ->
+            task = new Task fn
+            task.fail (args...) ->
+                expect(args[0]).toBe 23
+                expect(args[1]).toBe 42
+            task.reject(23, 42)
+
     describe 'promise', ->
             beforeEach ->
                 fn = ->
