@@ -103,13 +103,11 @@ describe 'backburner.Task', ->
             task.reject(23, 42)
 
     describe 'promise', ->
-            beforeEach ->
-                fn = ->
-                task = new Task fn
-
             describeTaskPromise ->
                     fn = ->
                     task = new Task fn
                     return [task.promise(), (-> task.resolve()), (-> task.reject())]
                 , 'The result of Task.promise()'
+
+    #describe 'kill', ->
 
