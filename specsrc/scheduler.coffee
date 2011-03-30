@@ -1,4 +1,5 @@
 {trackCalls} = require('spec-utils')
+WAIT_TIME = 1000
 
 {scheduler} = require 'backburner-scheduler'
 {Task} = require 'backburner'
@@ -105,6 +106,31 @@ describe 'Scheduler', ->
             waits 4 * scheduler.period()
             runs ->
                 expect(fn2.called).toBe true
+
+        it 'should reject any killed tasks', ->
+            fn1 = trackCalls()
+            task1 = new Task fn1, runnable: true
+            fn2 = trackCalls()
+            task2 = new Task fn2, runnable: true
+
+            scheduler.exec task1
+            scheduler.exec task2
+            scheduler.kill task1, task2
+            waitsFor (-> task1.isRejected() and task2.isRejected()),
+                'both tasks to be rejected',
+                WAIT_TIME
+
+        it 'should not reject any unkilled tasks', ->
+            fn1 = trackCalls()
+            task1 = new Task fn1, runnable: true
+            fn2 = trackCalls()
+            task2 = new Task fn2, runnable: true
+
+            scheduler.exec task1
+            scheduler.exec task2
+            scheduler.kill task1
+            waitsFor (-> task1.isRejected()), 'the first task to be rejected', WAIT_TIME
+            expect(task2.isRejected()).toBe false
 
     describe 'provides killAll and', ->
         beforeEach ->

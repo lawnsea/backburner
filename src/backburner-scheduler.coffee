@@ -62,6 +62,9 @@ kill = (tasks...) ->
         if curTask >= taskpool.length
             curTask = 0
         delete taskindex[task.__schedulerId]
+
+        # TODO: decide on a place to define a constant for this
+        task.reject 'killed'
         
 killAll = ->
     taskpool = []
