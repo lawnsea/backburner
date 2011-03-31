@@ -29,7 +29,8 @@ loopFn = ->
             return scheduleLoopFn()
     taskpool[curTask].tick()
     scheduleLoopFn()
-    nextTask()
+    if taskpool.length > 0
+        nextTask()
 
 exec = (task) ->
     task.__schedulerId = nextTaskId
