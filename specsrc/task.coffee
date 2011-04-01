@@ -1,6 +1,8 @@
 {describeDeferred, describePromise} = require('deferred')
+{trackCalls} = require('spec-utils')
+WAIT_TIME = 1000
 
-{Task} = require('backburner')
+{Task, spawn} = require('backburner')
 {Deferred} = require('backburner-deferred')
 
 describeTaskPromise = (promiseFactory, name) ->
@@ -9,6 +11,15 @@ describeTaskPromise = (promiseFactory, name) ->
     describe name + ' implements TaskPromise and ', ->
         describePromise ->
             return promiseFactory()
+
+    describe 'kill', ->
+        # XXX: this test is implementation-specific, which is not the best, but I don't 
+        #      know another way right now...
+        it 'should kill the task in question', ->
+            p = spawn ->
+            p.kill()
+            waitsFor (-> p.isRejected()), 'the task to be rejected', WAIT_TIME
+
 exports.describeTaskPromise = describeTaskPromise
 
 describe 'backburner.Task', ->
@@ -85,6 +96,12 @@ describe 'backburner.Task', ->
                 expect(args[1]).toBe 42
             task.resolve(23, 42)
 
+        it 'should kill the task in question', ->
+            task = new Task ->
+            task.kill = trackCalls()
+            task.resolve()
+            expect(task.kill.called).toBe true
+
     describe 'reject', ->
         it 'should call failure functions with the correct context', ->
             context = {}
@@ -102,12 +119,15 @@ describe 'backburner.Task', ->
                 expect(args[1]).toBe 42
             task.reject(23, 42)
 
+        it 'should kill the task in question', ->
+            task = new Task ->
+            task.kill = trackCalls()
+            task.reject()
+            expect(task.kill.called).toBe true
+
     describe 'promise', ->
             describeTaskPromise ->
                     fn = ->
                     task = new Task fn
                     return [task.promise(), (-> task.resolve()), (-> task.reject())]
                 , 'The result of Task.promise()'
-
-    #describe 'kill', ->
-

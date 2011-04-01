@@ -47,16 +47,37 @@ backburner.Task = class Task extends Deferred
     resolve: (args...) ->
         return @resolveWith @_context, args...
 
+    # Resolve this task with the provided context
+    resolveWith: (context, args...) ->
+        if @isRejected() or @isResolved()
+            return
+        r = super context, args...
+        @kill()
+        return r
+
     # Reject this task
     reject: (args...) ->
         return @rejectWith @_context, args...
 
+    # Reject this task with the provided context
+    rejectWith: (context, args...) ->
+        if @isRejected() or @isResolved()
+            return
+        r = super context, args...
+        @kill()
+        return r
+
     # Return the TaskPromise for this Task
     promise: ->
+        that = this
         if not @_promise?
-            super
-            # TODO: join and kill
+            super()
+            @_promise.kill = -> that.kill()
         return @_promise
+
+    # Kill this task
+    kill: ->
+        scheduler.kill this
 
 backburner.spawn = (fn, config) ->
     task = new Task fn, config
