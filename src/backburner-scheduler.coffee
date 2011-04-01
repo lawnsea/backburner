@@ -34,9 +34,9 @@ loopFn = ->
 
 exec = (task) ->
     task.__schedulerId = nextTaskId
-    nextTaskId++
     taskindex[nextTaskId] = taskpool.length
     taskpool.push task
+    nextTaskId++
     if not running and autostart
         start()
 
@@ -55,14 +55,15 @@ kill = (tasks...) ->
             continue
         i = taskindex[task.__schedulerId]
         taskpool.splice i, 1
+        delete taskindex[task.__schedulerId]
+        delete task.__schedulerId
 
-        for own id, index in taskindex
+        for own id, index of taskindex
             if index > i
                 taskindex[id]--
 
         if curTask >= taskpool.length
             curTask = 0
-        delete taskindex[task.__schedulerId]
 
         # TODO: decide on a place to define a constant for this
         task.reject 'killed'
