@@ -19,6 +19,9 @@ These are tasks and ideas that haven't been put somewhere else
 Sprint 1
 ========
 * fix tests to read as English phrases
+* Build for
+  * npm
+  * DHTML
 * for
   * for(setupFn, testFn, iterateFn, bodyFn)
 * forEach
@@ -28,8 +31,6 @@ Sprint 2
 ========
 * Build for
   * YUI
-  * npm
-  * DHTML
   * jQuery
 * Support join semantics as implemented by herman's jstasks
 * should spawn also accept a Task?
