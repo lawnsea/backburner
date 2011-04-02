@@ -1,6 +1,6 @@
 backburner = require('backburner')
 
-describe 'backburner interface', ->
+describe 'the backburner interface', ->
     beforeEach ->
         @addMatchers {
             toBeAFunction: ->

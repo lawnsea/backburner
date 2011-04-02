@@ -19,4 +19,4 @@ describe 'backburner.spawn', ->
                     @thisTask.stop()
             p = backburner.spawn fn
             return [p, (-> resolve = true), (-> reject = true)]
-        , 'The result of spawn()'
+        , 'returns a promise that'

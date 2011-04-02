@@ -6,8 +6,10 @@ WAIT_TIME = 1000
 describePromise = (promiseFactory, name) ->
     [promise, resolveFn, rejectFn] = promiseFactory()
     name ?= promise.constructor.name
-    describe name + ' implements Promise and ', ->
-        describe 'provides then', ->
+    if name isnt ''
+        name += ' '
+    describe name + 'implements Promise', ->
+        describe 'and provides then', ->
             beforeEach ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
@@ -39,7 +41,7 @@ describePromise = (promiseFactory, name) ->
                     expect(failFn1.called).toBe true
                     expect(failFn2.called).toBe true
 
-        describe 'provides done', ->
+        describe 'and provides done', ->
             beforeEach ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
@@ -53,7 +55,7 @@ describePromise = (promiseFactory, name) ->
                 runs ->
                     expect(successFn.called).toBe true
 
-        describe 'provides fail', ->
+        describe 'and provides fail', ->
             beforeEach ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
@@ -67,7 +69,7 @@ describePromise = (promiseFactory, name) ->
                 runs ->
                     expect(failFn.called).toBe true
     
-        describe 'provides isRejected', ->
+        describe 'and provides isRejected', ->
             beforeEach ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
@@ -86,7 +88,7 @@ describePromise = (promiseFactory, name) ->
                 runs ->
                     expect(promise.isRejected()).toBe true
         
-        describe 'provides isResolved', ->
+        describe 'and provides isResolved', ->
             beforeEach ->
                 [promise, resolveFn, rejectFn] = promiseFactory()
 
@@ -109,17 +111,20 @@ exports.describePromise = describePromise
 describePromise ->
         d = new Deferred
         return [d.promise(), (-> d.resolve()), (-> d.reject())]
-    , 'The result of Deferred.promise()'
+    , 'the result of Deferred.promise()'
 
 describeDeferred = (deferredFactory, name) ->
     deferred = deferredFactory()
     name ?= deferred.constructor.name
-    describe name + ' implements Deferred and ', ->
+    if name isnt ''
+        name += ' '
+    describe name + 'implements Deferred', ->
         describePromise ->
             d = new Deferred
             return [d, (-> d.resolve()), (-> d.reject())]
+        , 'which'
 
-        describe 'reject', ->
+        describe 'and provides reject', ->
             beforeEach ->
                 deferred = deferredFactory()
 
@@ -133,7 +138,7 @@ describeDeferred = (deferredFactory, name) ->
                         i++
                 deferred.reject expectedArgs...
 
-        describe 'rejectWith', ->
+        describe 'and provides rejectWith', ->
             beforeEach ->
                 deferred = deferredFactory()
 
@@ -197,7 +202,7 @@ describeDeferred = (deferredFactory, name) ->
                 expect(deferred.isResolved()).toBe false
                 expect(deferred.isRejected()).toBe true
 
-        describe 'resolve', ->
+        describe 'and provides resolve', ->
             beforeEach ->
                 deferred = deferredFactory()
             
@@ -211,7 +216,7 @@ describeDeferred = (deferredFactory, name) ->
                         i++
                 deferred.resolve expectedArgs...
 
-        describe 'resolveWith', ->
+        describe 'and provides resolveWith', ->
             beforeEach ->
                 deferred = deferredFactory()
 
@@ -276,18 +281,11 @@ describeDeferred = (deferredFactory, name) ->
                 expect(deferred.isResolved()).toBe true
                 expect(deferred.isRejected()).toBe false
 
-        describe 'promise', ->
+        describe 'and provides promise', ->
             beforeEach ->
                 deferred = deferredFactory()
-
-            describePromise ->
-                    d = new Deferred
-                    return [d.promise(), (-> d.resolve()), (-> d.reject())]
-                , 'The result of Deferred.promise()'
 
             it 'should always return the same promise', ->
                 promise = deferred.promise()
                 expect(deferred.promise()).toBe promise
 exports.describeDeferred = describeDeferred
-
-describeDeferred -> new Deferred

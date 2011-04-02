@@ -19,7 +19,7 @@ describe 'backburner.while', ->
                 return not resolve
             p = backburner.while testFn, loopFn
             return [p, (-> resolve = true), (-> reject = true)]
-        , 'The result of while()'
+        , 'returns a promise that'
 
     it 'should call the loop test with the provided context', ->
         context = {}

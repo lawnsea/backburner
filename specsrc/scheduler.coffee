@@ -4,10 +4,10 @@ WAIT_TIME = 1000
 {scheduler} = require 'backburner-scheduler'
 {Task} = require 'backburner'
 
-describe 'Scheduler', ->
+describe 'a Scheduler instance', ->
     beforeEach ->
         scheduler.autostart true
-    describe 'provides exec and', ->
+    describe 'provides exec', ->
         beforeEach ->
             scheduler.killAll()
 
@@ -66,7 +66,7 @@ describe 'Scheduler', ->
             scheduler.exec task
             expect(scheduler.isRunning()).not.toBe true
 
-    describe 'provides kill and', ->
+    describe 'provides kill', ->
         beforeEach ->
             scheduler.killAll()
 
@@ -132,7 +132,7 @@ describe 'Scheduler', ->
             waitsFor (-> task1.isRejected()), 'the first task to be rejected', WAIT_TIME
             expect(task2.isRejected()).toBe false
 
-    describe 'provides killAll and', ->
+    describe 'provides killAll', ->
         beforeEach ->
             scheduler.killAll()
 
@@ -166,7 +166,7 @@ describe 'Scheduler', ->
             scheduler.killAll()
             expect(scheduler.isRunning()).toBe true
 
-    describe 'provides start and', ->
+    describe 'provides start', ->
         beforeEach ->
             scheduler.killAll()
 
@@ -174,7 +174,7 @@ describe 'Scheduler', ->
             scheduler.start()
             expect(scheduler.isRunning()).toBe true
 
-    describe 'provides stop and', ->
+    describe 'provides stop', ->
         beforeEach ->
             scheduler.killAll()
 
@@ -182,7 +182,7 @@ describe 'Scheduler', ->
             scheduler.stop()
             expect(scheduler.isRunning()).toBe false
 
-    describe 'provides isRunning and', ->
+    describe 'provides isRunning', ->
         beforeEach ->
             scheduler.killAll()
 

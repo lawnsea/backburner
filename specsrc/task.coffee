@@ -8,11 +8,14 @@ WAIT_TIME = 1000
 describeTaskPromise = (promiseFactory, name) ->
     [promise, resolveFn, rejectFn] = promiseFactory()
     name ?= promise.constructor.name
-    describe name + ' implements TaskPromise and ', ->
+    if name isnt ''
+        name += ' '
+    describe name + 'implements TaskPromise', ->
         describePromise ->
             return promiseFactory()
+        , 'which'
 
-    describe 'kill', ->
+    describe name + 'provides kill', ->
         # XXX: this test is implementation-specific, which is not the best, but I don't 
         #      know another way right now...
         it 'should kill the task in question', ->
@@ -24,7 +27,9 @@ exports.describeTaskPromise = describeTaskPromise
 
 describe 'backburner.Task', ->
     # TODO: if anything public other than Task() returns a task, refactor as describeTask
-    describeDeferred -> new Deferred
+    describeDeferred ->
+        new Deferred
+    , ''
 
     it 'should require that the first argument to the constructor be a function', ->
         caught = false
@@ -40,7 +45,7 @@ describe 'backburner.Task', ->
         task = new Task (->), {}
         expect(task._context.thisTask).toBe task
 
-    describe 'runnable', ->
+    describe 'has config property "runnable"', ->
         it 'should default to false', ->
             task = new Task ->
             expect(task._runnable).toBe false
@@ -51,19 +56,19 @@ describe 'backburner.Task', ->
             task = new Task (->), { runnable: true }
             expect(task._runnable).toBe true
 
-    describe 'start', ->
+    describe 'provides start', ->
         it 'should set _runnable to true', ->
             task = new Task ->
             task.start()
             expect(task._runnable).toBe true
 
-    describe 'stop', ->
+    describe 'provides stop', ->
         it 'should set _runnable to false', ->
             task = new Task ->
             task.stop()
             expect(task._runnable).toBe false
 
-    describe 'tick', ->
+    describe 'provides tick', ->
         it 'should call the function provided in the constructor', ->
             called = false
             fn = ->
@@ -79,7 +84,7 @@ describe 'backburner.Task', ->
             task = new Task fn
             task.tick()
 
-    describe 'resolve', ->
+    describe 'provides resolve', ->
         it 'should call success functions with the correct context', ->
             context = {}
             fn = ->
@@ -102,7 +107,7 @@ describe 'backburner.Task', ->
             task.resolve()
             expect(task.kill.called).toBe true
 
-    describe 'reject', ->
+    describe 'provides reject', ->
         it 'should call failure functions with the correct context', ->
             context = {}
             fn = ->
@@ -125,9 +130,9 @@ describe 'backburner.Task', ->
             task.reject()
             expect(task.kill.called).toBe true
 
-    describe 'promise', ->
+    describe 'provides promise', ->
             describeTaskPromise ->
                     fn = ->
                     task = new Task fn
                     return [task.promise(), (-> task.resolve()), (-> task.reject())]
-                , 'The result of Task.promise()'
+                , 'which returns a promise that'
