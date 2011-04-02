@@ -87,7 +87,7 @@ backburner.spawn = (fn, config) ->
 
 whileFn = ->
     try
-        done = not @_loopTestFn()
+        done = not @_whileTestFn()
     catch e
         @thisTask.rejectWith this, e
 
@@ -95,18 +95,41 @@ whileFn = ->
         @thisTask.resolveWith this
     else
         try
-            @_loopBodyFn()
+            @_whileBodyFn()
         catch e
             @thisTask.rejectWith this, e
 
 backburner.while = (loopTestFn, loopBodyFn, context) ->
     context ?= {}
-    context._loopTestFn = loopTestFn
-    context._loopBodyFn = loopBodyFn
+    context._whileTestFn = loopTestFn
+    context._whileBodyFn = loopBodyFn
     backburner.spawn whileFn, { context: context }
+
+forFn = ->
+    try
+        @_forBodyFn()
+    catch e
+        @thisTask.rejectWith this, e
+
+    try
+        @_forIterateFn()
+    catch e
+        @thisTask.rejectWith this, e
+
+backburner.for = (setupFn, testFn, iterateFn, bodyFn, context) ->
+    context ?= {}
+    context._forIterateFn = iterateFn
+    context._forBodyFn = bodyFn
+    p = backburner.while testFn, forFn, context
+    try
+        setupFn.call context
+    catch e
+        context.thisTask.rejectWith context, e
+    return p
 
 (exports ? this).Task = backburner.Task
 (exports ? this).spawn = backburner.spawn
 (exports ? this).while = backburner.while
+(exports ? this).for = backburner.for
 (exports ? this).killAll = ->
     scheduler.killAll()

@@ -12,3 +12,5 @@ describe 'the backburner interface', ->
         expect(backburner.spawn).toBeAFunction()
     it 'should provide while', ->
         expect(backburner.while).toBeAFunction()
+    it 'should provide for', ->
+        expect(backburner.for).toBeAFunction()
