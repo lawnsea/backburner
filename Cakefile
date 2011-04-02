@@ -4,6 +4,10 @@ task 'test', 'Run all tests', ->
     exec 'cake build && node specs.js', (err, stdout, stderr) ->
         console.log stdout + stderr
 
+task 'test-verbose', 'Run all tests and generate verbose output', ->
+    exec 'cake build && node specs.js --verbose', (err, stdout, stderr) ->
+        console.log stdout + stderr
+
 task 'clean', 'Clean the working directory in the usual manner', ->
     exec 'rm -rf lib', (err, stdout, stderr) ->
         throw err if err
