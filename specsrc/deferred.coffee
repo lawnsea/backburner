@@ -108,11 +108,6 @@ describePromise = (promiseFactory, name) ->
                     expect(promise.isResolved()).toBe true
 exports.describePromise = describePromise
 
-describePromise ->
-        d = new Deferred
-        return [d.promise(), (-> d.resolve()), (-> d.reject())]
-    , 'the result of Deferred.promise()'
-
 describeDeferred = (deferredFactory, name) ->
     deferred = deferredFactory()
     name ?= deferred.constructor.name
@@ -284,6 +279,11 @@ describeDeferred = (deferredFactory, name) ->
         describe 'and provides promise', ->
             beforeEach ->
                 deferred = deferredFactory()
+
+            describePromise ->
+                    d = new Deferred
+                    return [d.promise(), (-> d.resolve()), (-> d.reject())]
+                , 'which returns a promise that'
 
             it 'should always return the same promise', ->
                 promise = deferred.promise()
