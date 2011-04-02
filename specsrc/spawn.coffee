@@ -4,7 +4,7 @@ backburner = require('backburner')
 
 describe 'backburner.spawn', ->
     backburner.killAll()
-    afterEach = ->
+    afterEach ->
         backburner.killAll()
 
     describeTaskPromise ->

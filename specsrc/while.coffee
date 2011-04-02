@@ -6,7 +6,7 @@ backburner = require('backburner')
 
 describe 'backburner.while', ->
     backburner.killAll()
-    afterEach = ->
+    afterEach ->
         backburner.killAll()
 
     describeTaskPromise ->

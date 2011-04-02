@@ -12,6 +12,9 @@ describeScheduler = (schedulerFactory, name) ->
     describe name + 'implements Scheduler', ->
         beforeEach ->
             scheduler.autostart true
+        afterEach ->
+            scheduler.killAll()
+
         describe 'and provides exec', ->
             beforeEach ->
                 scheduler.killAll()
