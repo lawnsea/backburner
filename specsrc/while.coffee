@@ -71,7 +71,7 @@ describe 'backburner.while', ->
         runs ->
             expect(p.isResolved()).toBe true
 
-    it 'should not resolve if the loop test returns true', ->
+    it 'should not resolve or reject if the loop test returns true', ->
         testFn = ->
             return true
         bodyFn = trackCalls()
@@ -79,6 +79,7 @@ describe 'backburner.while', ->
         waitsFor (-> bodyFn.called), 'bodyFn was never called', WAIT_TIME
         runs ->
             expect(p.isResolved()).not.toBe true
+            expect(p.isRejected()).not.toBe true
 
     it 'should rejectWith the passed context and pass the error if the loop test throws', ->
         context = {}
