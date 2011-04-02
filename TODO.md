@@ -2,7 +2,6 @@ Unsorted
 ========
 These are tasks and ideas that haven't been put somewhere else
 
-* Implement in Coffeescript
 * Build for
   * Node.js
   * Dojo
@@ -14,17 +13,23 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* for
-  * for(setupFn, testFn, iterateFn, bodyFn)
+* rename loopFn to bodyFn in while implementation and tests
+* fix wording of waitsFor strings
 * forEach
   * forEach(array|object, fn)
-* write a few simple demos
-* document public API
+* figure out how to handle require() in the browser
+* write inline documentation
 * create project page on github
+  * document public API
+  * post tests and run in
+    * IE
+    * FF
+    * Chrome
+  * write a few simple demos
 
 Sprint 2
 ========
-* Build for
+* Build for:
   * npm
   * DHTML
   * YUI
