@@ -12,12 +12,12 @@ describe 'backburner.while', ->
     describeTaskPromise ->
             resolve = false
             reject = false
-            loopFn = ->
+            bodyFn = ->
             testFn = ->
                 if reject
                     throw 'done'
                 return not resolve
-            p = backburner.while testFn, loopFn
+            p = backburner.while testFn, bodyFn
             return [p, (-> resolve = true), (-> reject = true)]
         , 'returns a promise that'
 

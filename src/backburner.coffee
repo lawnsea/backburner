@@ -99,10 +99,10 @@ whileFn = ->
         catch e
             @thisTask.rejectWith this, e
 
-backburner.while = (loopTestFn, loopBodyFn, context) ->
+backburner.while = (testFn, bodyFn, context) ->
     context ?= {}
-    context._whileTestFn = loopTestFn
-    context._whileBodyFn = loopBodyFn
+    context._whileTestFn = testFn
+    context._whileBodyFn = bodyFn
     backburner.spawn whileFn, { context: context }
 
 forFn = ->
