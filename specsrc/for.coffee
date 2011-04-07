@@ -196,7 +196,6 @@ describe 'backburner.for', ->
 
     describe 'accepts a body function', ->
         afterEach ->
-            debugger
             backburner.killAll()
 
         it 'should be called after setup and test and before the iterate function', ->
