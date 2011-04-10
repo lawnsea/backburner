@@ -4,6 +4,8 @@ Backburner
 
 {Deferred} = require 'backburner-deferred'
 {scheduler} = require 'backburner-scheduler'
+{_} = require 'underscore'
+
 backburner = {}
 
 # A Backburner Task represents some chunk of work that needs to be done
@@ -127,9 +129,59 @@ backburner.for = (setupFn, testFn, iterateFn, bodyFn, context) ->
         context.thisTask.rejectWith context, e
     return p
 
+eachArraySetupFn = ->
+    @_index = 0
+    @_len = @_v.length
+
+eachArrayTestFn = ->
+    @_index < @_len
+
+eachArrayIterateFn = ->
+    @_index++
+
+eachArrayFn = ->
+    if @_eachBodyFn(@_index, @_v[@_index]) is false
+        @thisTask.rejectWith this
+
+eachObjectSetupFn = ->
+    @_index = 0
+    @_keys = _.keys @_v
+    @_len = @_keys.length
+
+eachObjectTestFn = ->
+    @_index < @_len
+
+eachObjectIterateFn = ->
+    @_index++
+
+eachObjectFn = ->
+    k = @_keys[@_index]
+    if @_eachBodyFn(k, @_v[k]) is false
+        @thisTask.rejectWith this
+
+backburner.each = (v, bodyFn, context) ->
+    # XXX: we're assuming that v is unmodified after this call, document that
+    context ?= {}
+    context._v = v
+    context._eachBodyFn = bodyFn
+    if _.isArray v
+        p = backburner.for eachArraySetupFn,
+            eachArrayTestFn,
+            eachArrayIterateFn,
+            eachArrayFn,
+            context
+    else
+        p = backburner.for eachObjectSetupFn,
+            eachObjectTestFn,
+            eachObjectIterateFn,
+            eachObjectFn,
+            context
+    return p
+
 (exports ? this).Task = backburner.Task
 (exports ? this).spawn = backburner.spawn
 (exports ? this).while = backburner.while
 (exports ? this).for = backburner.for
+(exports ? this).each = backburner.each
 (exports ? this).killAll = ->
     scheduler.killAll()
