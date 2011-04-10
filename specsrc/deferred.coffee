@@ -27,6 +27,21 @@ describePromise = (promiseFactory, name) ->
                     expect(successFn1.called).toBe true
                     expect(successFn2.called).toBe true
 
+            it 'should call success callbacks immediately if resolved', ->
+                successFn1 = trackCalls()
+                successFn2 = trackCalls()
+                failFn = trackCalls()
+
+                runs resolveFn
+                waitsFor (-> promise.isResolved()), 'promise to resolve', WAIT_TIME
+                runs ->
+                    promise.then [successFn1]
+                    promise.then [successFn2], [failFn]
+
+                    expect(successFn1.called).toBe true
+                    expect(successFn2.called).toBe true
+                    expect(failFn.called).not.toBe true
+
             it 'should register failure callbacks', ->
                 successFn = trackCalls()
                 failFn1 = trackCalls()
@@ -40,6 +55,21 @@ describePromise = (promiseFactory, name) ->
                 runs ->
                     expect(failFn1.called).toBe true
                     expect(failFn2.called).toBe true
+
+            it 'should call failure callbacks immediately if rejected', ->
+                successFn = trackCalls()
+                failFn1 = trackCalls()
+                failFn2 = trackCalls()
+
+                runs rejectFn
+                waitsFor (-> promise.isRejected()), 'promise to reject', WAIT_TIME
+                runs ->
+                    promise.then [], [failFn1]
+                    promise.then [successFn], [failFn2]
+
+                    expect(failFn1.called).toBe true
+                    expect(failFn2.called).toBe true
+                    expect(successFn.called).not.toBe true
 
         describe 'and provides done', ->
             beforeEach ->

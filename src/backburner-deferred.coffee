@@ -1,3 +1,5 @@
+{_} = require 'underscore'
+
 class Deferred
     _rejected: false
     _resolved: false
@@ -14,6 +16,8 @@ class Deferred
             return
         @_rejected = true
         @_resolved = false
+        @_thenContext = context
+        @_thenArgs = args
         for fn in @_failFns
             fn.apply context, args
 
@@ -25,14 +29,23 @@ class Deferred
             return
         @_rejected = false
         @_resolved = true
+        @_thenContext = context
+        @_thenArgs = args
         for fn in @_successFns
             fn.apply context, args
 
     then: (successFns, failFns) ->
         successFns ?= []
         failFns ?= []
-        @_successFns = @_successFns.concat successFns
-        @_failFns = @_failFns.concat failFns
+        successFns = if _.isArray(successFns) then successFns else [successFns]
+        failFns = if _.isArray(failFns) then failFns else [failFns]
+        if @_rejected or @_resolved
+            fns = if @_resolved then successFns else failFns
+            for fn in fns
+                fn.apply @_thenContext, @_thenArgs
+        else
+            @_successFns = @_successFns.concat successFns
+            @_failFns = @_failFns.concat failFns
 
     done: (successFns) ->
         @then successFns
