@@ -25,11 +25,11 @@ describe 'backburner.while', ->
         context = {}
         testFn = trackCalls ->
             expect(this).toBe context
-            return true
+            @thisTask.resolve()
         bodyFn = ->
 
         p = backburner.while testFn, bodyFn, context
-        waitsFor (-> testFn.called), 'testFn was never called', WAIT_TIME
+        waitsFor (-> p.isResolved()), 'testFn was never called', WAIT_TIME
 
     it 'should call the loop body if the loop test returns true', ->
         testFn = ->
@@ -42,14 +42,13 @@ describe 'backburner.while', ->
 
     it 'should not call the loop body if the loop test returns false', ->
         called = false
-        testFn = ->
-            called = true
+        testFn = trackCalls ->
             return false
         bodyFn = trackCalls()
         p = backburner.while testFn, bodyFn
         p.done (e) ->
             expect(bodyFn.called).not.toBe true
-        waitsFor (-> called), 'testFn was never called', WAIT_TIME
+        waitsFor (-> testFn.called), 'testFn was never called', WAIT_TIME
 
     it 'should call the loop body with the provided context', ->
         context = {}
@@ -60,7 +59,7 @@ describe 'backburner.while', ->
             @thisTask.resolve()
 
         p = backburner.while testFn, bodyFn, context
-        waitsFor (-> bodyFn.called), 'bodyFn was never called', WAIT_TIME
+        waitsFor (-> p.isResolved()), 'bodyFn was never called', WAIT_TIME
 
     it 'should resolve if the loop test returns false', ->
         testFn = trackCalls ->

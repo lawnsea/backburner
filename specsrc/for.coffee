@@ -32,12 +32,13 @@ describe 'backburner.for', ->
                 expect(testFn.called).not.toBe true
                 expect(iterateFn.called).not.toBe true
                 expect(bodyFn.called).not.toBe true
+                @thisTask.resolve()
             testFn = trackCalls()
             iterateFn = trackCalls()
             bodyFn = trackCalls()
 
             p = backburner.for setupFn, testFn, iterateFn, bodyFn
-            waitsFor (-> setupFn.called), 'setupFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'setupFn to be called', WAIT_TIME
 
         it 'should be called exactly once', ->
             setupFn = trackCalls()
@@ -58,10 +59,11 @@ describe 'backburner.for', ->
             context = {}
             setupFn = trackCalls ->
                 expect(this).toBe context
+                @thisTask.resolve()
             fn = ->
 
             p = backburner.for setupFn, fn, fn, fn, context
-            waitsFor (-> setupFn.called), 'setupFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'setupFn to be called', WAIT_TIME
 
         it 'should rejectWith the correct context and pass the error if it throws', ->
             e = 'foo'
@@ -69,12 +71,15 @@ describe 'backburner.for', ->
             setupFn = trackCalls ->
                 throw e
             fn = ->
-
-            p = backburner.for setupFn, fn, fn, fn, context
-            p.fail (err) ->
+            failFn = trackCalls (err) ->
                 expect(this).toBe context
                 expect(err).toBe e
+
+            p = backburner.for setupFn, fn, fn, fn, context
+            p.fail failFn
             waitsFor (-> p.isRejected()), 'the task to reject', WAIT_TIME
+            runs ->
+                expect(failFn.called).toBe true
 
     describe 'accepts a test function', ->
         afterEach ->
@@ -86,20 +91,22 @@ describe 'backburner.for', ->
                 expect(setupFn.called).toBe true
                 expect(iterateFn.called).not.toBe true
                 expect(bodyFn.called).not.toBe true
+                @thisTask.resolve()
             iterateFn = trackCalls()
             bodyFn = trackCalls()
 
             p = backburner.for setupFn, testFn, iterateFn, bodyFn
-            waitsFor (-> testFn.called), 'testFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'testFn to be called', WAIT_TIME
 
         it 'should be called with the provided context', ->
             context = {}
             testFn = trackCalls ->
                 expect(this).toBe context
+                @thisTask.resolve()
             fn = ->
 
             p = backburner.for fn, testFn, fn, fn, context
-            waitsFor (-> testFn.called), 'testFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'testFn to be called', WAIT_TIME
 
         it 'should not resolve or reject if it returns true', ->
             testFn = trackCalls ->
@@ -165,20 +172,22 @@ describe 'backburner.for', ->
                 expect(setupFn.called).toBe true
                 expect(testFn.called).toBe true
                 expect(bodyFn.called).toBe true
+                @thisTask.resolve()
             bodyFn = trackCalls()
 
             p = backburner.for setupFn, testFn, iterateFn, bodyFn
-            waitsFor (-> iterateFn.called), 'iterateFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'iterateFn to be called', WAIT_TIME
 
         it 'should be called with the provided context', ->
             context = {}
             iterateFn = trackCalls ->
                 expect(this).toBe context
+                @thisTask.resolve()
             fn = ->
                 true
 
             p = backburner.for fn, fn, iterateFn, fn, context
-            waitsFor (-> iterateFn.called), 'iterateFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'iterateFn to be called', WAIT_TIME
 
         it 'should rejectWith the correct context and pass the error if it throws', ->
             e = 'foo'
@@ -207,19 +216,21 @@ describe 'backburner.for', ->
                 expect(setupFn.called).toBe true
                 expect(testFn.called).toBe true
                 expect(iterateFn.called).not.toBe true
+                @thisTask.resolve()
 
             p = backburner.for setupFn, testFn, iterateFn, bodyFn
-            waitsFor (-> bodyFn.called), 'bodyFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'bodyFn to be called', WAIT_TIME
 
         it 'should be called with the provided context', ->
             context = {}
             bodyFn = trackCalls ->
                 expect(this).toBe context
+                @thisTask.resolve()
             fn = ->
                 true
 
             p = backburner.for fn, fn, fn, bodyFn, context
-            waitsFor (-> bodyFn.called), 'bodyFn to be called', WAIT_TIME
+            waitsFor (-> p.isResolved()), 'bodyFn to be called', WAIT_TIME
 
         it 'should rejectWith the correct context and pass the error if it throws', ->
             e = 'foo'
