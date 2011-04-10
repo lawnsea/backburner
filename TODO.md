@@ -13,11 +13,13 @@ These are tasks and ideas that haven't been put somewhere else
 
 Sprint 1
 ========
-* rename loopFn to bodyFn in while implementation and tests
-* fix wording of waitsFor strings
-* forEach
-  * forEach(array|object, fn)
+* write tests to verify that fns passed to then after resolve/reject get the right args
+* add a scheduler.break method
+* each
+  * each(array|object, fn)
+  * should reject (?) if fn returns false
 * figure out how to handle require() in the browser
+  * you may be doing your exporting wrong
 * write inline documentation
 * create project page on github
   * document public API
@@ -26,6 +28,7 @@ Sprint 1
     * FF
     * Chrome
   * write a few simple demos
+* fix wording of waitsFor strings
 
 Sprint 2
 ========
@@ -36,6 +39,3 @@ Sprint 2
   * jQuery
 * Support join semantics as implemented by herman's jstasks
 * should spawn also accept a Task?
-* rename while as whilst?
-  * or, instead just import it as awhile and similary for for: afor, etc
-* look at using underscore
