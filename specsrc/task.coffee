@@ -1,3 +1,6 @@
+root = this
+root.backburner ?= {}
+
 {describeDeferred, describePromise} = require('deferred')
 {trackCalls} = require('spec-utils')
 WAIT_TIME = 1000
@@ -23,6 +26,7 @@ describeTaskPromise = (promiseFactory, name) ->
             p.kill()
             waitsFor (-> p.isRejected()), 'the task to be rejected', WAIT_TIME
 
+root.backburner.describeTaskPromise = describeTaskPromise
 exports.describeTaskPromise = describeTaskPromise
 
 describe 'backburner.Task', ->

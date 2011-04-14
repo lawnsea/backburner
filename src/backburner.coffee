@@ -1,6 +1,7 @@
 ###
 Backburner
 ###
+root = this
 
 {Deferred} = require 'backburner-deferred'
 {scheduler} = require 'backburner-scheduler'
@@ -178,10 +179,10 @@ backburner.each = (v, bodyFn, context) ->
             context
     return p
 
-(exports ? this).Task = backburner.Task
-(exports ? this).spawn = backburner.spawn
-(exports ? this).while = backburner.while
-(exports ? this).for = backburner.for
-(exports ? this).each = backburner.each
-(exports ? this).killAll = ->
+backburner.killAll = ->
     scheduler.killAll()
+
+root.backburner ?= {}
+root.backburner[k] = v for own k, v of backburner
+if exports?
+    exports[k] = v for own k, v of backburner

@@ -74,4 +74,7 @@ class Deferred
                 that.isResolved()
         return @_promise
 
-(exports ? this).Deferred = Deferred
+root.backburner ?= {}
+root.backburner.Deferred = Deferred
+if exports?
+    exports.Deferred = Deferred

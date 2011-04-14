@@ -1,3 +1,6 @@
+root = this
+root.backburner ?= {}
+
 {trackCalls} = require('spec-utils')
 WAIT_TIME = 1000
 
@@ -136,6 +139,8 @@ describePromise = (promiseFactory, name) ->
                 waitsFor (-> promise.isResolved()), 'promise to resolve', WAIT_TIME
                 runs ->
                     expect(promise.isResolved()).toBe true
+
+root.backburner.describePromise = describePromise
 exports.describePromise = describePromise
 
 describeDeferred = (deferredFactory, name) ->
@@ -318,4 +323,6 @@ describeDeferred = (deferredFactory, name) ->
             it 'should always return the same promise', ->
                 promise = deferred.promise()
                 expect(deferred.promise()).toBe promise
+
+root.backburner.describeDeferred = describeDeferred
 exports.describeDeferred = describeDeferred

@@ -75,7 +75,7 @@ killAll = ->
     if autostart
         stop()
 
-(exports ? this).scheduler =
+scheduler =
     exec: exec
     start: start
     stop: stop
@@ -90,3 +90,8 @@ killAll = ->
         if newPeriod instanceof Number and newPeriod >= 0
             period = newPeriod
         return period
+
+root.backburner ?= {}
+root.backburner.scheduler = scheduler
+if exports?
+    exports.scheduler = scheduler

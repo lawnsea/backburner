@@ -10,16 +10,18 @@ These are tasks and ideas that haven't been put somewhere else
 * Log to console
 * Consider adding support for more sophisticated scheduling algorithms as plugins
 * Pluggable scheduler?
+* add a scheduler.break method
 
 Sprint 1
 ========
-* write tests to verify that fns passed to then after resolve/reject get the right args
-* add a scheduler.break method
-* each
-  * each(array|object, fn)
-  * should reject (?) if fn returns false
-* figure out how to handle require() in the browser
-  * you may be doing your exporting wrong
+* add cslib and jslib folders to hold submodules
+* add underscore as a submodule and remove node_modules
+* refactor to use RequireJS
+  * change Cakefile to use r.js and a bootstrap script for the tests
+  * change Cakefile to build for the browser with require's build tool
+* refactor to provide an export(object) fn to each compiled module that does the right thing
+  * node: export (symbols) -> exports[k] = v for own k, v in symbols
+  * browser: export (symbols) -> root.backburner ?= {}; then as above
 * write inline documentation
 * create project page on github
   * document public API
