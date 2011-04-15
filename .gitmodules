@@ -4,3 +4,9 @@
 [submodule "jslib/underscore"]
 	path = jslib/underscore
 	url = https://github.com/documentcloud/underscore.git
+[submodule "jslib/jasmine-node"]
+	path = jslib/jasmine-node
+	url = https://github.com/mhevery/jasmine-node.git
+[submodule "jslib/jasmine"]
+	path = jslib/jasmine
+	url = https://github.com/pivotal/jasmine.git
