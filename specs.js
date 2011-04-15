@@ -1,7 +1,6 @@
 #!/usr/local/bin/node
 require.paths.push('./lib');
 require.paths.push('./spec');
-require.paths.push('./jslib');
 var jasmine = require('jasmine-node');
 var sys = require('sys');
 
