@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
+  <link rel="stylesheet" type="text/css" href="jslib/jasmine/lib/jasmine.css">
+  <script type="text/javascript" src="jslib/jasmine/lib/jasmine.js"></script>
+  <script type="text/javascript" src="jslib/jasmine/lib/jasmine-html.js"></script>
+
+  <script type="text/javascript" src="jslib/hack-require.js"></script>
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="jslib/underscore/underscore.js"></script>
+  <script type="text/javascript" src="lib/backburner-deferred.js"></script>
+  <script type="text/javascript" src="lib/backburner-scheduler.js"></script>
+  <script type="text/javascript" src="lib/backburner.js"></script>
+
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="spec/spec-utils.js"></script>
+  <script type="text/javascript" src="spec/interface.js"></script>
+  <script type="text/javascript" src="spec/deferred.js"></script>
+  <script type="text/javascript" src="spec/task.js"></script>
+  <script type="text/javascript" src="spec/scheduler.js"></script>
+  <script type="text/javascript" src="spec/spawn.js"></script>
+  <script type="text/javascript" src="spec/while.js"></script>
+  <script type="text/javascript" src="spec/for.js"></script>
+  <script type="text/javascript" src="spec/each.js"></script>
+
+</head>
+<body>
+  <script type="text/javascript">
+    jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+    jasmine.getEnv().execute();
+  </script>
+</body>
+</html>

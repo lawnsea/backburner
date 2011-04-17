@@ -1,3 +1,4 @@
+root = this
 {_} = require 'underscore'
 
 class Deferred

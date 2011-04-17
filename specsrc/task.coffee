@@ -27,7 +27,8 @@ describeTaskPromise = (promiseFactory, name) ->
             waitsFor (-> p.isRejected()), 'the task to be rejected', WAIT_TIME
 
 root.backburner.describeTaskPromise = describeTaskPromise
-exports.describeTaskPromise = describeTaskPromise
+if exports?
+    exports.describeTaskPromise = describeTaskPromise
 
 describe 'backburner.Task', ->
     # TODO: if anything public other than Task() returns a task, refactor as describeTask

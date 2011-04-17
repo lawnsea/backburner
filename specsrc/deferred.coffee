@@ -141,7 +141,8 @@ describePromise = (promiseFactory, name) ->
                     expect(promise.isResolved()).toBe true
 
 root.backburner.describePromise = describePromise
-exports.describePromise = describePromise
+if exports?
+    exports.describePromise = describePromise
 
 describeDeferred = (deferredFactory, name) ->
     deferred = deferredFactory()
@@ -325,4 +326,5 @@ describeDeferred = (deferredFactory, name) ->
                 expect(deferred.promise()).toBe promise
 
 root.backburner.describeDeferred = describeDeferred
-exports.describeDeferred = describeDeferred
+if exports?
+    exports.describeDeferred = describeDeferred

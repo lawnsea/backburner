@@ -201,7 +201,9 @@ describeScheduler = (schedulerFactory, name) ->
             it 'should return false if the scheduler is not running', ->
                 scheduler.stop()
                 expect(scheduler.isRunning()).toBe false
-exports.describeScheduler = describeScheduler
+
+if exports?
+    exports.describeScheduler = describeScheduler
 
 describeScheduler ->
         return scheduler

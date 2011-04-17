@@ -1,3 +1,4 @@
+root = this
 taskpool = []
 taskindex = {}
 handle = null
