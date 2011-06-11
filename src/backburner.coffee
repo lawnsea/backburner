@@ -9,6 +9,8 @@ root = this
 
 backburner = {}
 
+nopFn = ->
+
 # A Backburner Task represents some chunk of work that needs to be done
 backburner.Task = class Task extends Deferred
     # Construct a new Task
@@ -178,6 +180,32 @@ backburner.each = (v, bodyFn, context) ->
             eachObjectFn,
             context
     return p
+
+mapFn = (k, v) ->
+    @_result[k] = @_mapBodyFn(v)
+    return true
+
+mapDoneFn = (args...) ->
+    task = @_wrapperTask
+    delete @_wrapperTask
+    task.resolveWith @, @_result, args...
+
+mapFailFn = (args...) ->
+    task = @_wrapperTask
+    delete @_wrapperTask
+    task.rejectWith @, args...
+
+backburner.map = (v, bodyFn, context) ->
+    context ?= {}
+    context._mapBodyFn = bodyFn
+    context._result = if _.isArray v then [] else {}
+    p = backburner.each v, mapFn, context
+
+    context._wrapperTask = new Task nopFn
+    p.done mapDoneFn
+    p.fail mapFailFn
+
+    return context._wrapperTask.promise()
 
 backburner.killAll = ->
     scheduler.killAll()

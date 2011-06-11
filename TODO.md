@@ -14,6 +14,7 @@ These are tasks and ideas that haven't been put somewhere else
 Sprint 1
 ========
 * support join semantics as implemented by herman's task.js
+  * then(fn) - spawn and join
 * review current task.js API and look for chances to be closer to it
 * should spawn also accept a Task?
 * write inline documentation
