@@ -207,6 +207,32 @@ backburner.map = (v, bodyFn, context) ->
 
     return context._wrapperTask.promise()
 
+reduceFn = (k, v) ->
+    @_result = @_reduceBodyFn(@_result, v)
+    return true
+
+reduceDoneFn = (args...) ->
+    task = @_wrapperTask
+    delete @_wrapperTask
+    task.resolveWith @, @_result, args...
+
+reduceFailFn = (args...) ->
+    task = @_wrapperTask
+    delete @_wrapperTask
+    task.rejectWith @, args...
+
+backburner.reduce = (initialValue, v, bodyFn, context) ->
+    context ?= {}
+    context._reduceBodyFn = bodyFn
+    context._result = initialValue
+    p = backburner.each v, reduceFn, context
+
+    context._wrapperTask = new Task nopFn
+    p.done reduceDoneFn
+    p.fail reduceFailFn
+
+    return context._wrapperTask.promise()
+
 backburner.killAll = ->
     scheduler.killAll()
 
