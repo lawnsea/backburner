@@ -114,15 +114,16 @@ describe 'backburner.map', ->
                 expect(result[i]).toBe(i + 2) for i in [0..9]
             waitsFor (-> p.isResolved()), 'the task to resolve', WAIT_TIME
 
-    it 'should behave as expected when passed a simple fn and array', ->
-        a = (x for x in [1..10])
-        context =
-            sum: 0
-        bodyFn = (v) ->
-            @sum += v
-        p = backburner.map a, bodyFn, context
-        p.done ->
-            sum = 0
-            sum += x for x in [1..10]
-            expect(@sum).toBe sum
-        waitsFor (-> p.isResolved()), 'the task to resolve', WAIT_TIME
+        it 'should store the return value of the body function in the appropriate object key', ->
+            context = {}
+            o =
+                foo: 'bar'
+                fiz: 'biz'
+            bodyFn = (s) ->
+                return s.toUpperCase()
+
+            p = backburner.map o, bodyFn, context
+            p.done (result) ->
+                expect(this).toBe context
+                expect(result[k]).toBe(k + 2) for k in o
+            waitsFor (-> p.isResolved()), 'the task to resolve', WAIT_TIME
