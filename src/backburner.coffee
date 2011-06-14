@@ -121,7 +121,9 @@ forFn = ->
     catch e
         @thisTask.rejectWith this, e
 
-backburner.for = (setupFn, testFn, iterateFn, bodyFn, context) ->
+# use ['for'] as a workaround for CoffeeScript issue 1436
+# https://github.com/jashkenas/coffee-script/issues/1436
+backburner['for'] = (setupFn, testFn, iterateFn, bodyFn, context) ->
     context ?= {}
     context._forIterateFn = iterateFn
     context._forBodyFn = bodyFn
@@ -132,52 +134,52 @@ backburner.for = (setupFn, testFn, iterateFn, bodyFn, context) ->
         context.thisTask.rejectWith context, e
     return p
 
-eachArraySetupFn = ->
+forEachArraySetupFn = ->
     @_index = 0
     @_len = @_v.length
 
-eachArrayTestFn = ->
+forEachArrayTestFn = ->
     @_index < @_len
 
-eachArrayIterateFn = ->
+forEachArrayIterateFn = ->
     @_index++
 
-eachArrayFn = ->
-    if @_eachBodyFn(@_index, @_v[@_index]) is false
+forEachArrayFn = ->
+    if @_index of @_v and @_forEachBodyFn(@_index, @_v[@_index], @_v) is false
         @thisTask.rejectWith this
 
-eachObjectSetupFn = ->
+forEachObjectSetupFn = ->
     @_index = 0
     @_keys = _.keys @_v
     @_len = @_keys.length
 
-eachObjectTestFn = ->
+forEachObjectTestFn = ->
     @_index < @_len
 
-eachObjectIterateFn = ->
+forEachObjectIterateFn = ->
     @_index++
 
-eachObjectFn = ->
+forEachObjectFn = ->
     k = @_keys[@_index]
-    if @_eachBodyFn(k, @_v[k]) is false
+    if k of @_v and @_forEachBodyFn(k, @_v[k], @_v) is false
         @thisTask.rejectWith this
 
-backburner.each = (v, bodyFn, context) ->
-    # XXX: we're assuming that v is unmodified after this call, document that
+# https://developer.mozilla.org/en/javascript/reference/global_objects/array/foreach
+backburner.foreach = (v, bodyfn, context) ->
     context ?= {}
     context._v = v
-    context._eachBodyFn = bodyFn
+    context._foreachbodyfn = bodyfn
     if _.isArray v
-        p = backburner.for eachArraySetupFn,
-            eachArrayTestFn,
-            eachArrayIterateFn,
-            eachArrayFn,
+        p = backburner['for'] forEachArraySetupFn,
+            forEachArrayTestFn,
+            forEachArrayIterateFn,
+            forEachArrayFn,
             context
     else
-        p = backburner.for eachObjectSetupFn,
-            eachObjectTestFn,
-            eachObjectIterateFn,
-            eachObjectFn,
+        p = backburner['for'] forEachObjectSetupFn,
+            forEachObjectTestFn,
+            forEachObjectIterateFn,
+            forEachObjectFn,
             context
     return p
 
@@ -199,7 +201,7 @@ backburner.map = (v, bodyFn, context) ->
     context ?= {}
     context._mapBodyFn = bodyFn
     context._result = if _.isArray v then [] else {}
-    p = backburner.each v, mapFn, context
+    p = backburner.forEach v, mapFn, context
 
     context._wrapperTask = new Task nopFn
     p.done mapDoneFn
@@ -225,7 +227,7 @@ backburner.reduce = (initialValue, v, bodyFn, context) ->
     context ?= {}
     context._reduceBodyFn = bodyFn
     context._result = initialValue
-    p = backburner.each v, reduceFn, context
+    p = backburner.forEach v, reduceFn, context
 
     context._wrapperTask = new Task nopFn
     p.done reduceDoneFn
