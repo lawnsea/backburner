@@ -183,8 +183,8 @@ backburner.forEach = (v, bodyfn, context) ->
             context
     return p
 
-mapFn = (k, v) ->
-    @_result[k] = @_mapBodyFn(v)
+mapFn = (k, v, o) ->
+    @_result[k] = @_mapBodyFn(k, v, o)
     return true
 
 mapDoneFn = (args...) ->
