@@ -165,10 +165,10 @@ forEachObjectFn = ->
         @thisTask.rejectWith this
 
 # https://developer.mozilla.org/en/javascript/reference/global_objects/array/foreach
-backburner.foreach = (v, bodyfn, context) ->
+backburner.forEach = (v, bodyfn, context) ->
     context ?= {}
     context._v = v
-    context._foreachbodyfn = bodyfn
+    context._forEachBodyFn = bodyfn
     if _.isArray v
         p = backburner['for'] forEachArraySetupFn,
             forEachArrayTestFn,
