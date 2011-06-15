@@ -193,25 +193,6 @@ describeIterationMethod = (method, name) ->
                 expect(a[1]).toBe false
             waitsFor (-> p.isRejected()), 'the task to reject', WAIT_TIME
 
-        it 'should rejectWith the correct context and pass nothing if the body fn returns false', ->
-            a = [false, false]
-            e = 'foo'
-            context =
-                i: 0
-            bodyFn = ->
-                if @i > 0
-                    return false
-                a[@i] = true
-                @i++
-
-            p = method a, bodyFn, context
-            p.fail (err) ->
-                expect(this).toBe context
-                expect(err).toBe undefined
-                expect(a[0]).toBe true
-                expect(a[1]).toBe false
-            waitsFor (-> p.isRejected()), 'the task to reject', WAIT_TIME
-
 root.backburner.describeIterationMethod = describeIterationMethod
 if exports?
     exports.describeIterationMethod = describeIterationMethod
