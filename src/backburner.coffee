@@ -209,8 +209,8 @@ backburner.map = (v, bodyFn, context) ->
 
     return context._wrapperTask.promise()
 
-reduceFn = (k, v) ->
-    @_result = @_reduceBodyFn(@_result, v)
+reduceFn = (k, v, o) ->
+    @_result = @_reduceBodyFn(@_result, v, k, o)
     return true
 
 reduceDoneFn = (args...) ->
@@ -223,11 +223,24 @@ reduceFailFn = (args...) ->
     delete @_wrapperTask
     task.rejectWith @, args...
 
-backburner.reduce = (initialValue, v, bodyFn, context) ->
+backburner.reduce = (v, bodyFn, initialValue, context) ->
     context ?= {}
     context._reduceBodyFn = bodyFn
-    context._result = initialValue
     p = backburner.forEach v, reduceFn, context
+    if initialValue?
+        context._result = initialValue
+    else
+        if _.isArray v
+            if v.length > 0
+                context._result = v[0]
+            else
+                throw new TypeError 'Reduce of empty array with no initial value'
+        else
+            if context._keys.length > 0
+                context._result = v[context._keys[0]]
+            else
+                throw new TypeError 'Reduce of empty object with no initial value'
+        context._index++
 
     context._wrapperTask = new Task nopFn
     p.done reduceDoneFn
